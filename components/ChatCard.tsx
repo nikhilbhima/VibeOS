@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Paperclip, Send, Sparkles, SlidersHorizontal, ChevronDown } from "lucide-react";
+import { Paperclip, Send, Sparkles, SlidersHorizontal, ChevronDown, SquarePen } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +18,8 @@ interface ChatCardProps {
   message: string;
   onMessageChange: (message: string) => void;
   onSend: () => void;
+  onNewChat?: () => void;
+  hasMessages?: boolean;
 }
 
 const tools = [
@@ -39,11 +41,14 @@ export function ChatCard({
   message,
   onMessageChange,
   onSend,
+  onNewChat,
+  hasMessages = false,
 }: ChatCardProps) {
   const [vibeModel, setVibeModel] = useState("VibeOS Pro");
   const [showConnectModal, setShowConnectModal] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState("Anthropic");
   const [apiKey, setApiKey] = useState("");
+  const [showNewChatModal, setShowNewChatModal] = useState(false);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -57,8 +62,17 @@ export function ChatCard({
       {/* Input Area */}
       <div className="p-4">
         <div className="relative">
-          {/* Mode Indicator - Top Right */}
-          <div className="absolute top-3 right-3 z-10">
+          {/* Mode Indicator and New Chat - Top Right */}
+          <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
+            {hasMessages && onNewChat && (
+              <button
+                onClick={() => setShowNewChatModal(true)}
+                className="p-1.5 bg-background rounded-lg text-foreground border border-border hover:bg-accent hover:text-accent-foreground transition-colors"
+                title="New chat"
+              >
+                <SquarePen className="w-4 h-4" />
+              </button>
+            )}
             <span className="px-3 py-1 bg-background rounded-lg text-xs font-medium text-foreground border border-border">
               {selectedMode}
             </span>
@@ -229,6 +243,37 @@ export function ChatCard({
             <p className="text-xs text-muted-foreground mt-6">
               Supported now: Anthropic, DeepSeek, Gemini, Grok, OpenAI.
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* New Chat Confirmation Modal */}
+      {showNewChatModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowNewChatModal(false)}>
+          <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-md m-4" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-xl font-semibold text-card-foreground mb-2">Start new chat?</h2>
+            <p className="text-sm text-muted-foreground mb-6">
+              Your current conversation will be lost. This action cannot be undone.
+            </p>
+
+            <div className="flex gap-3">
+              <Button
+                onClick={() => setShowNewChatModal(false)}
+                variant="outline"
+                className="flex-1 h-10 rounded-lg"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  setShowNewChatModal(false);
+                  onNewChat?.();
+                }}
+                className="flex-1 h-10 rounded-lg bg-foreground hover:bg-foreground/90 text-background font-medium"
+              >
+                Start New Chat
+              </Button>
+            </div>
           </div>
         </div>
       )}

@@ -34,6 +34,11 @@ export default function Home() {
     }, 1000);
   };
 
+  const handleNewChat = () => {
+    setMessages([]);
+    setMessage("");
+  };
+
   const hasStarted = messages.length > 0;
 
   return (
@@ -71,6 +76,8 @@ export default function Home() {
               message={message}
               onMessageChange={setMessage}
               onSend={handleSend}
+              onNewChat={handleNewChat}
+              hasMessages={hasStarted}
             />
           </div>
         ) : (
@@ -115,6 +122,8 @@ export default function Home() {
                   message={message}
                   onMessageChange={setMessage}
                   onSend={handleSend}
+                  onNewChat={handleNewChat}
+                  hasMessages={hasStarted}
                 />
               </div>
             </div>
