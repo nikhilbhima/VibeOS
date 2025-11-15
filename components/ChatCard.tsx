@@ -142,7 +142,7 @@ export function ChatCard({
                 <ChevronDown className="w-4 h-4 ml-2" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-48">
+            <DropdownMenuContent align="start" side="bottom" className="w-48">
               {tools.map((tool) => (
                 <DropdownMenuItem
                   key={tool}

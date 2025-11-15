@@ -21,14 +21,14 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
       {/* Logo and Title - Click to toggle */}
       <button
         onClick={onToggle}
-        className="flex flex-col items-start gap-2 mb-6 hover:opacity-80 transition-opacity w-full"
+        className="flex items-center gap-3 mb-6 hover:opacity-80 transition-opacity w-full"
         title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
       >
         <div className="w-12 h-12 rounded-xl overflow-hidden bg-accent flex-shrink-0 flex items-center justify-center">
           <span className="text-xl font-bold text-accent-foreground">V</span>
         </div>
         {!isCollapsed && (
-          <div className="flex-1 min-w-0 w-full">
+          <div className="flex-1 min-w-0">
             <h1 className="text-lg font-semibold text-sidebar-foreground">
               VibeOS
             </h1>
@@ -79,12 +79,12 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
         >
           <Layers className="w-5 h-5 flex-shrink-0" />
           {!isCollapsed && (
-            <>
-              <span className="font-medium">Prompt Library</span>
-              <span className="ml-auto text-[10px] text-sidebar-foreground/40 whitespace-nowrap">
+            <div className="flex items-center justify-between flex-1 min-w-0">
+              <span className="font-medium whitespace-nowrap">Prompt Library</span>
+              <span className="text-[10px] text-sidebar-foreground/40 whitespace-nowrap ml-2">
                 (coming soon)
               </span>
-            </>
+            </div>
           )}
         </button>
       </nav>
@@ -92,21 +92,13 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
       {/* Theme Toggle */}
       <button
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors mb-2 ${
-          isCollapsed ? "justify-center" : ""
-        }`}
+        className="w-full flex items-center justify-center px-3 py-3 rounded-xl text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors mb-2"
         title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
       >
         {theme === "dark" ? (
-          <>
-            <Sun className="w-5 h-5 flex-shrink-0" />
-            {!isCollapsed && <span className="font-medium">Light Mode</span>}
-          </>
+          <Sun className="w-5 h-5 flex-shrink-0" />
         ) : (
-          <>
-            <Moon className="w-5 h-5 flex-shrink-0" />
-            {!isCollapsed && <span className="font-medium">Dark Mode</span>}
-          </>
+          <Moon className="w-5 h-5 flex-shrink-0" />
         )}
       </button>
 
