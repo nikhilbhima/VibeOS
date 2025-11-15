@@ -130,9 +130,9 @@ export function ChatCard({
         <Button
           onClick={onSend}
           disabled={!message.trim()}
-          className="h-10 w-10 rounded-full bg-primary hover:bg-primary/90 p-0 flex items-center justify-center"
+          className="h-9 px-4 rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground flex items-center justify-center gap-2"
         >
-          <Send className="w-5 h-5 text-primary-foreground" />
+          <Send className="w-4 h-4" />
         </Button>
       </div>
     </div>

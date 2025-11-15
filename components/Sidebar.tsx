@@ -21,18 +21,18 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
       {/* Logo and Title - Click to toggle */}
       <button
         onClick={onToggle}
-        className="flex items-center gap-3 mb-6 hover:opacity-80 transition-opacity"
+        className="flex flex-col items-start gap-2 mb-6 hover:opacity-80 transition-opacity w-full"
         title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
       >
-        <div className="w-14 h-14 rounded-xl overflow-hidden bg-accent flex-shrink-0 flex items-center justify-center">
-          <span className="text-2xl font-bold text-accent-foreground">V</span>
+        <div className="w-12 h-12 rounded-xl overflow-hidden bg-accent flex-shrink-0 flex items-center justify-center">
+          <span className="text-xl font-bold text-accent-foreground">V</span>
         </div>
         {!isCollapsed && (
-          <div className="flex-1 min-w-0">
-            <h1 className="text-xl font-semibold text-sidebar-foreground truncate">
+          <div className="flex-1 min-w-0 w-full">
+            <h1 className="text-lg font-semibold text-sidebar-foreground">
               VibeOS
             </h1>
-            <p className="text-sm text-sidebar-foreground/70 mt-0.5">
+            <p className="text-xs text-sidebar-foreground/70 leading-tight">
               The ultimate vibe-coding system
             </p>
           </div>
@@ -43,7 +43,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
       <nav className="flex-1 space-y-2">
         {/* Home - Active */}
         <button
-          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-sidebar-accent text-sidebar-accent-foreground transition-colors ${
+          className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl bg-sidebar-accent text-sidebar-accent-foreground transition-colors ${
             isCollapsed ? "justify-center" : ""
           }`}
           title="Home"
@@ -54,7 +54,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
 
         {/* Workspace - Coming Soon */}
         <button
-          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sidebar-foreground/50 cursor-not-allowed ${
+          className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sidebar-foreground/50 cursor-not-allowed ${
             isCollapsed ? "justify-center" : ""
           }`}
           title="Workspace (coming soon)"
@@ -63,7 +63,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
           {!isCollapsed && (
             <>
               <span className="font-medium">Workspace</span>
-              <span className="ml-auto text-xs text-sidebar-foreground/40">
+              <span className="ml-auto text-[10px] text-sidebar-foreground/40 whitespace-nowrap">
                 (coming soon)
               </span>
             </>
@@ -72,7 +72,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
 
         {/* Prompt Library - Coming Soon */}
         <button
-          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sidebar-foreground/50 cursor-not-allowed ${
+          className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sidebar-foreground/50 cursor-not-allowed ${
             isCollapsed ? "justify-center" : ""
           }`}
           title="Prompt Library (coming soon)"
@@ -81,7 +81,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
           {!isCollapsed && (
             <>
               <span className="font-medium">Prompt Library</span>
-              <span className="ml-auto text-xs text-sidebar-foreground/40">
+              <span className="ml-auto text-[10px] text-sidebar-foreground/40 whitespace-nowrap">
                 (coming soon)
               </span>
             </>
@@ -92,7 +92,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
       {/* Theme Toggle */}
       <button
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors mb-2 ${
+        className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors mb-2 ${
           isCollapsed ? "justify-center" : ""
         }`}
         title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
@@ -112,7 +112,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
 
       {/* User */}
       <button
-        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors ${
+        className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors ${
           isCollapsed ? "justify-center" : ""
         }`}
         title="User"
