@@ -123,7 +123,7 @@ export function ChatCard({
                 className="h-9 px-3 rounded-lg bg-background border-border text-sm font-medium"
               >
                 <SlidersHorizontal className="w-4 h-4 mr-2" />
-                Tool used
+                {selectedTool}
                 <ChevronDown className="w-4 h-4 ml-2" />
               </Button>
             </DropdownMenuTrigger>
