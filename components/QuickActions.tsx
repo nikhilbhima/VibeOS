@@ -33,8 +33,8 @@ export function QuickActions({ selected, onSelect }: QuickActionsProps) {
               h-10 px-4 rounded-xl font-medium text-sm transition-all flex items-center justify-center
               ${
                 isActive
-                  ? "bg-accent text-accent-foreground shadow-sm hover:bg-accent/90"
-                  : "bg-card border-border hover:bg-muted hover:text-foreground"
+                  ? "bg-foreground text-background shadow-sm hover:bg-foreground/90"
+                  : "bg-card border-border hover:bg-accent hover:text-accent-foreground"
               }
             `}
           >

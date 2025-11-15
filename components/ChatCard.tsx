@@ -41,7 +41,7 @@ export function ChatCard({
 }: ChatCardProps) {
   const [vibeModel, setVibeModel] = useState("VibeOS Pro");
   const [showConnectModal, setShowConnectModal] = useState(false);
-  const [selectedProvider, setSelectedProvider] = useState("DeepSeek");
+  const [selectedProvider, setSelectedProvider] = useState("Anthropic");
   const [apiKey, setApiKey] = useState("");
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -90,7 +90,14 @@ export function ChatCard({
                 variant="outline"
                 className="h-9 px-3 rounded-lg bg-background border-border text-sm font-medium"
               >
-                {vibeModel}
+                {vibeModel === "VibeOS Pro" ? (
+                  <>
+                    <span>VibeOS </span>
+                    <span className="text-[#c9a574] font-semibold">Pro</span>
+                  </>
+                ) : (
+                  vibeModel
+                )}
                 <ChevronDown className="w-4 h-4 ml-2" />
               </Button>
             </DropdownMenuTrigger>
@@ -138,7 +145,7 @@ export function ChatCard({
         <Button
           onClick={onSend}
           disabled={!message.trim()}
-          className="h-9 px-4 rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground flex items-center justify-center gap-2"
+          className="h-9 px-4 rounded-lg bg-foreground hover:bg-foreground/90 text-background flex items-center justify-center gap-2"
         >
           <Send className="w-4 h-4" />
         </Button>
@@ -171,8 +178,8 @@ export function ChatCard({
                     paddingRight: '40px'
                   }}
                 >
-                  <option value="DeepSeek">DeepSeek</option>
                   <option value="Anthropic">Anthropic</option>
+                  <option value="DeepSeek">DeepSeek</option>
                   <option value="Gemini">Gemini</option>
                   <option value="Grok">Grok</option>
                   <option value="OpenAI">OpenAI</option>
@@ -212,7 +219,7 @@ export function ChatCard({
                   setShowConnectModal(false);
                   setApiKey("");
                 }}
-                className="flex-1 h-11 rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground text-base font-medium"
+                className="flex-1 h-11 rounded-lg bg-foreground hover:bg-foreground/90 text-background text-base font-medium"
               >
                 Save
               </Button>
