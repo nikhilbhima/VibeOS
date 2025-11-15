@@ -13,11 +13,22 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
   const { theme, setTheme } = useTheme();
 
   return (
-    <aside
-      className={`fixed left-0 top-0 h-screen bg-sidebar border-r border-sidebar-border flex flex-col p-4 transition-all duration-300 ${
-        isCollapsed ? "w-[80px]" : "w-[280px]"
-      }`}
-    >
+    <>
+      {/* Overlay for mobile */}
+      {!isCollapsed && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={onToggle}
+        />
+      )}
+
+      <aside
+        className={`fixed left-0 top-0 h-screen bg-sidebar border-r border-sidebar-border flex flex-col p-4 transition-all duration-300 z-50 ${
+          isCollapsed
+            ? "w-[80px] -translate-x-full md:translate-x-0"
+            : "w-[280px] translate-x-0"
+        }`}
+      >
       {/* Logo and Title - Click to toggle */}
       <button
         onClick={onToggle}
@@ -117,5 +128,6 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
         {!isCollapsed && <span className="font-medium">User</span>}
       </button>
     </aside>
+    </>
   );
 }

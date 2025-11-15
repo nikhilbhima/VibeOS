@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { PWAInstall } from "@/components/PWAInstall";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,6 +17,19 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "VibeOS - The Ultimate Vibe-Coding System",
   description: "Stop wasting credits on AI coding tools. Plan better, build faster with VibeOS.",
+  manifest: "/manifest.json",
+  themeColor: "#c9a574",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "VibeOS",
+  },
 };
 
 export default function RootLayout({
@@ -34,6 +48,7 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
+          <PWAInstall />
           {children}
         </ThemeProvider>
       </body>
