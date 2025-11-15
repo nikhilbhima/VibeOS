@@ -137,11 +137,13 @@ export function ChatCard({
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="h-9 px-2 sm:px-3 rounded-lg bg-background border-border text-xs sm:text-sm font-medium min-w-0 flex-1"
+                className="h-8 sm:h-9 px-2 sm:px-2.5 rounded-lg bg-background border-border text-[10px] sm:text-xs font-medium min-w-0"
               >
-                <SlidersHorizontal className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
-                <span className="truncate">{selectedTool}</span>
-                <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 flex-shrink-0" />
+                <SlidersHorizontal className="w-3 h-3 mr-1 flex-shrink-0" />
+                <span className="truncate whitespace-nowrap">
+                  Tool used{selectedTool !== "Anything" && selectedTool !== "None" ? `: ${selectedTool}` : selectedTool === "None" ? ": None" : ""}
+                </span>
+                <ChevronDown className="w-3 h-3 ml-1 flex-shrink-0" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" side="bottom" className="w-48">

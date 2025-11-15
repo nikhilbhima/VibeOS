@@ -8,7 +8,7 @@ import { ChatCard } from "@/components/ChatCard";
 
 export default function Home() {
   const [selectedMode, setSelectedMode] = useState("Brainstorm");
-  const [selectedTool, setSelectedTool] = useState("Anything");
+  const [selectedTool, setSelectedTool] = useState("None");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Array<{ role: string; content: string }>>([]);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
