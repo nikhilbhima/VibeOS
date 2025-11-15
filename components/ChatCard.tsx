@@ -146,9 +146,9 @@ export function ChatCard({
         <Button
           onClick={onSend}
           disabled={!message.trim()}
-          className="h-9 px-4 rounded-lg bg-foreground hover:bg-foreground/90 text-background flex items-center justify-center gap-2"
+          className="h-9 px-6 rounded-lg bg-foreground hover:bg-foreground/90 text-background flex items-center justify-center gap-2"
         >
-          <Send className="w-4 h-4" />
+          <span className="text-lg">→</span>
         </Button>
       </div>
 
