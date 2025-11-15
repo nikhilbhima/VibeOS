@@ -39,7 +39,8 @@ export function ChatCard({
   onMessageChange,
   onSend,
 }: ChatCardProps) {
-  const [vibeModel] = useState("VibeOS");
+  const [vibeModel, setVibeModel] = useState("VibeOS Pro");
+  const [showConnectModal, setShowConnectModal] = useState(false);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -92,10 +93,15 @@ export function ChatCard({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
-              <DropdownMenuItem>VibeOS</DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setVibeModel("VibeOS")}>
+                VibeOS
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setVibeModel("VibeOS Pro")}>
                 <span>VibeOS </span>
                 <span className="text-[#c9a574] font-semibold">Pro</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setShowConnectModal(true)}>
+                Connect your AI
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -135,6 +141,75 @@ export function ChatCard({
           <Send className="w-4 h-4" />
         </Button>
       </div>
+
+      {/* Connect AI Modal */}
+      {showConnectModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowConnectModal(false)}>
+          <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-md m-4" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-xl font-semibold text-card-foreground mb-4">Connect your AI</h2>
+            <p className="text-sm text-muted-foreground mb-6">
+              Connect your own AI models by providing your API keys below.
+            </p>
+
+            <div className="space-y-4">
+              {/* OpenAI */}
+              <div>
+                <label className="text-sm font-medium text-card-foreground block mb-2">
+                  OpenAI API Key
+                </label>
+                <input
+                  type="password"
+                  placeholder="sk-..."
+                  className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                />
+              </div>
+
+              {/* Anthropic */}
+              <div>
+                <label className="text-sm font-medium text-card-foreground block mb-2">
+                  Anthropic API Key
+                </label>
+                <input
+                  type="password"
+                  placeholder="sk-ant-..."
+                  className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                />
+              </div>
+
+              {/* Google */}
+              <div>
+                <label className="text-sm font-medium text-card-foreground block mb-2">
+                  Google AI API Key
+                </label>
+                <input
+                  type="password"
+                  placeholder="AIza..."
+                  className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <Button
+                onClick={() => setShowConnectModal(false)}
+                variant="outline"
+                className="flex-1 h-10 rounded-lg"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  // TODO: Save API keys
+                  setShowConnectModal(false);
+                }}
+                className="flex-1 h-10 rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground"
+              >
+                Connect
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
