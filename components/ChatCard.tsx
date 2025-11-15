@@ -89,7 +89,7 @@ export function ChatCard({
             onChange={(e) => onMessageChange(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Drop the idea here..."
-            className="min-h-[120px] pl-12 pr-20 pt-4 pb-4 resize-none border-none focus-visible:ring-0 text-base bg-transparent"
+            className="min-h-[100px] pl-12 pr-20 pt-4 pb-4 resize-none border-none focus-visible:ring-0 text-base bg-transparent"
           />
         </div>
       </div>
