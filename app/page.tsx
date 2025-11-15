@@ -1,0 +1,126 @@
+"use client";
+
+import { useState } from "react";
+import { Sidebar } from "@/components/Sidebar";
+import { QuickActions } from "@/components/QuickActions";
+import { ChatCard } from "@/components/ChatCard";
+
+export default function Home() {
+  const [selectedMode, setSelectedMode] = useState("Brainstorm");
+  const [selectedTool, setSelectedTool] = useState("Anything");
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<Array<{ role: string; content: string }>>([]);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  const handleSend = () => {
+    if (!message.trim()) return;
+
+    // Add user message
+    setMessages((prev) => [...prev, { role: "user", content: message }]);
+
+    // TODO: Call API to generate response
+    // For now, just clear the input
+    setMessage("");
+
+    // Simulate AI response
+    setTimeout(() => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: `I'll help you with ${selectedMode.toLowerCase()} using ${selectedTool}. This is where the AI response will appear.`,
+        },
+      ]);
+    }, 1000);
+  };
+
+  const hasStarted = messages.length > 0;
+
+  return (
+    <div className="flex min-h-screen bg-background">
+      {/* Sidebar */}
+      <Sidebar
+        isCollapsed={isSidebarCollapsed}
+        onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+      />
+
+      {/* Main Content */}
+      <main
+        className={`flex-1 flex flex-col transition-all duration-300 ${
+          isSidebarCollapsed ? "ml-[80px]" : "ml-[280px]"
+        }`}
+      >
+        {!hasStarted ? (
+          // BEFORE first message - Centered layout
+          <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-8">
+            {/* Heading */}
+            <h1 className="text-2xl sm:text-3xl font-semibold text-center mb-8 text-foreground">
+              What are you building today?
+            </h1>
+
+            {/* Quick Actions */}
+            <div className="w-full max-w-[900px] mb-6">
+              <QuickActions selected={selectedMode} onSelect={setSelectedMode} />
+            </div>
+
+            {/* Chat Card */}
+            <ChatCard
+              selectedMode={selectedMode}
+              selectedTool={selectedTool}
+              onToolChange={setSelectedTool}
+              message={message}
+              onMessageChange={setMessage}
+              onSend={handleSend}
+            />
+          </div>
+        ) : (
+          // AFTER first message - Messages at top, chat box at bottom
+          <>
+            {/* Messages Area - Scrollable */}
+            <div className="flex-1 overflow-y-auto px-4 sm:px-8 pt-8 pb-4">
+              <div className="w-full max-w-[900px] mx-auto space-y-3">
+                {messages.map((msg, idx) => (
+                  <div
+                    key={idx}
+                    className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                  >
+                    <div
+                      className={`
+                        max-w-[85%] px-4 py-3 rounded-2xl text-sm
+                        ${
+                          msg.role === "user"
+                            ? "bg-accent text-accent-foreground"
+                            : "bg-card text-card-foreground border border-border"
+                        }
+                      `}
+                    >
+                      {msg.content}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom Section - Fixed at bottom */}
+            <div className="bg-background px-4 sm:px-8 py-4">
+              <div className="w-full max-w-[900px] mx-auto space-y-4">
+                {/* Quick Actions */}
+                <QuickActions selected={selectedMode} onSelect={setSelectedMode} />
+
+                {/* Chat Card */}
+                <ChatCard
+                  selectedMode={selectedMode}
+                  selectedTool={selectedTool}
+                  onToolChange={setSelectedTool}
+                  message={message}
+                  onMessageChange={setMessage}
+                  onSend={handleSend}
+                />
+              </div>
+            </div>
+          </>
+        )}
+      </main>
+    </div>
+  );
+}
