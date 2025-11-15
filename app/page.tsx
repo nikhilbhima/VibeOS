@@ -68,19 +68,38 @@ export default function Home() {
         <h1 className="ml-3 text-lg font-semibold">VibeOS</h1>
       </div>
 
-      {/* Dark Mode Toggle - Top Right */}
+      {/* Top Right Actions */}
       {mounted && (
-        <button
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="fixed top-4 right-4 z-50 p-2 sm:p-2.5 rounded-lg bg-background border border-border hover:bg-accent transition-colors"
-          title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-        >
-          {theme === "dark" ? (
-            <Sun className="w-4 h-4 sm:w-5 sm:h-5" />
-          ) : (
-            <Moon className="w-4 h-4 sm:w-5 sm:h-5" />
-          )}
-        </button>
+        <div className="fixed top-4 right-4 z-50 flex items-center gap-1.5 sm:gap-2">
+          {/* Sign In Button */}
+          <button
+            className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg bg-background border border-border hover:bg-accent transition-colors text-[10px] sm:text-xs font-medium"
+            title="Sign in"
+          >
+            Sign in
+          </button>
+
+          {/* Sign Up Button */}
+          <button
+            className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg bg-foreground text-background hover:bg-foreground/90 transition-colors text-[10px] sm:text-xs font-medium"
+            title="Sign up"
+          >
+            Sign up
+          </button>
+
+          {/* Dark Mode Toggle */}
+          <button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="p-1.5 sm:p-2 rounded-lg bg-background border border-border hover:bg-accent transition-colors"
+            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {theme === "dark" ? (
+              <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            ) : (
+              <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            )}
+          </button>
+        </div>
       )}
 
       {/* Main Content */}
@@ -118,7 +137,7 @@ export default function Home() {
           // AFTER first message - Messages at top, chat box at bottom
           <>
             {/* Messages Area - Scrollable */}
-            <div className="flex-1 overflow-y-auto px-3 sm:px-4 md:px-8 pt-4 sm:pt-8 pb-4">
+            <div className="flex-1 overflow-y-auto px-3 sm:px-4 md:px-8 pt-16 sm:pt-20 pb-4">
               <div className="w-full max-w-[900px] mx-auto space-y-2 sm:space-y-3">
                 {messages.map((msg, idx) => (
                   <div
@@ -146,7 +165,7 @@ export default function Home() {
             <div className="bg-background px-3 sm:px-4 md:px-8 py-3 sm:py-4">
               <div className="w-full max-w-[900px] mx-auto space-y-3 sm:space-y-4">
                 {/* Quick Actions */}
-                <QuickActions selected={selectedMode} onSelect={setSelectedMode} />
+                <QuickActions selected={selectedMode} onSelect={setSelectedMode} compact />
 
                 {/* Chat Card */}
                 <ChatCard

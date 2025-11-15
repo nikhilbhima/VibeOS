@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { Home, Folder, Layers, User, ChevronLeft } from "lucide-react";
 
 interface SidebarProps {
@@ -9,6 +10,10 @@ interface SidebarProps {
 }
 
 export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const isActive = (path: string) => pathname === path || pathname?.startsWith(path + "/");
 
   return (
     <>
@@ -38,47 +43,46 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
         <div className="w-12 h-12 rounded-xl overflow-hidden bg-accent flex-shrink-0 flex items-center justify-center">
           <span className="text-xl font-bold text-accent-foreground">V</span>
         </div>
-        {!isCollapsed && (
-          <div className="flex-1 min-w-0">
-            <h1 className="text-lg font-semibold text-sidebar-foreground text-left">
-              VibeOS
-            </h1>
-            <p className="text-xs text-sidebar-foreground/70 leading-tight text-left">
-              The ultimate vibe-coding system
-            </p>
-          </div>
-        )}
+        <div className={`flex-1 min-w-0 overflow-hidden transition-all duration-300 ${
+          isCollapsed ? "opacity-0 w-0" : "opacity-100"
+        }`}>
+          <h1 className="text-lg font-semibold text-sidebar-foreground text-left whitespace-nowrap">
+            VibeOS
+          </h1>
+          <p className="text-xs text-sidebar-foreground/70 leading-tight text-left whitespace-nowrap">
+            The ultimate vibe-coding system
+          </p>
+        </div>
       </button>
 
       {/* Navigation */}
       <nav className="flex-1 space-y-2">
-        {/* Home - Active */}
+        {/* Home */}
         <button
-          className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl bg-sidebar-accent text-sidebar-accent-foreground transition-colors ${
-            isCollapsed ? "justify-center" : ""
-          }`}
+          onClick={() => router.push("/")}
+          className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-colors ${
+            isActive("/") && !isActive("/workspace")
+              ? "bg-sidebar-accent text-sidebar-accent-foreground"
+              : "text-sidebar-foreground hover:bg-sidebar-accent/50"
+          } ${isCollapsed ? "justify-center" : ""}`}
           title="Home"
         >
           <Home className="w-5 h-5 flex-shrink-0" />
           {!isCollapsed && <span className="font-medium">Home</span>}
         </button>
 
-        {/* Workspace - Coming Soon */}
+        {/* Workspace */}
         <button
-          className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sidebar-foreground/50 cursor-not-allowed ${
-            isCollapsed ? "justify-center" : ""
-          }`}
-          title="Workspace (coming soon)"
+          onClick={() => router.push("/workspace")}
+          className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-colors ${
+            isActive("/workspace")
+              ? "bg-sidebar-accent text-sidebar-accent-foreground"
+              : "text-sidebar-foreground hover:bg-sidebar-accent/50"
+          } ${isCollapsed ? "justify-center" : ""}`}
+          title="Workspace"
         >
           <Folder className="w-5 h-5 flex-shrink-0" />
-          {!isCollapsed && (
-            <>
-              <span className="font-medium">Workspace</span>
-              <span className="ml-auto text-[10px] text-sidebar-foreground/40 whitespace-nowrap">
-                (coming soon)
-              </span>
-            </>
-          )}
+          {!isCollapsed && <span className="font-medium">Workspace</span>}
         </button>
 
         {/* Prompt Library - Coming Soon */}

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 interface QuickActionsProps {
   selected: string;
   onSelect: (action: string) => void;
+  compact?: boolean;
 }
 
 const actions = [
@@ -17,9 +18,9 @@ const actions = [
   { id: "Blueprint", label: "Blueprint", icon: FileBox },
 ];
 
-export function QuickActions({ selected, onSelect }: QuickActionsProps) {
+export function QuickActions({ selected, onSelect, compact = false }: QuickActionsProps) {
   return (
-    <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+    <div className={`flex flex-wrap items-center justify-center ${compact ? "gap-1.5 sm:gap-2" : "gap-2 sm:gap-3"}`}>
       {actions.map((action) => {
         const Icon = action.icon;
         const isActive = selected === action.id;
@@ -30,7 +31,10 @@ export function QuickActions({ selected, onSelect }: QuickActionsProps) {
             variant={isActive ? "default" : "outline"}
             onClick={() => onSelect(action.id)}
             className={`
-              h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl font-medium text-[11px] sm:text-xs transition-all flex items-center justify-center gap-1
+              ${compact ? "h-7 sm:h-8 px-2 sm:px-2.5" : "h-8 sm:h-9 px-2.5 sm:px-3"}
+              rounded-xl font-medium
+              ${compact ? "text-[10px] sm:text-[11px]" : "text-[11px] sm:text-xs"}
+              transition-all flex items-center justify-center gap-1
               ${
                 isActive
                   ? "bg-foreground text-background shadow-sm hover:bg-foreground/90"
@@ -38,7 +42,7 @@ export function QuickActions({ selected, onSelect }: QuickActionsProps) {
               }
             `}
           >
-            <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 flex-shrink-0" />
+            <Icon className={`${compact ? "w-2.5 h-2.5 sm:w-3 sm:h-3" : "w-3 h-3 sm:w-3.5 sm:h-3.5"} flex-shrink-0`} />
             <span className="whitespace-nowrap">{action.label}</span>
           </Button>
         );

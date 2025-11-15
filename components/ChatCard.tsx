@@ -52,7 +52,7 @@ export function ChatCard({
   const { theme } = useTheme();
   const [vibeModel, setVibeModel] = useState("VibeOS Pro");
   const [showConnectModal, setShowConnectModal] = useState(false);
-  const [selectedProvider, setSelectedProvider] = useState("Anthropic");
+  const [selectedProvider, setSelectedProvider] = useState("");
   const [apiKey, setApiKey] = useState("");
   const [showNewChatModal, setShowNewChatModal] = useState(false);
 
@@ -96,7 +96,7 @@ export function ChatCard({
             onKeyDown={handleKeyDown}
             placeholder="Drop the idea here..."
             autoFocus
-            className="min-h-[85px] pl-10 sm:pl-12 pr-16 sm:pr-20 pt-3 sm:pt-4 pb-3 sm:pb-4 resize-none border-none focus-visible:ring-0 text-sm sm:text-base bg-transparent"
+            className="min-h-[65px] pl-10 sm:pl-12 pr-16 sm:pr-20 pt-3 sm:pt-4 pb-3 sm:pb-4 resize-none border-none focus-visible:ring-0 text-sm sm:text-base bg-transparent"
           />
         </div>
       </div>
@@ -110,12 +110,12 @@ export function ChatCard({
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="h-9 px-2 sm:px-3 rounded-lg bg-background border-border text-xs sm:text-sm font-medium min-w-0"
+                className="h-8 sm:h-9 px-2 sm:px-3 rounded-lg bg-background border-border text-[10px] sm:text-sm font-medium min-w-0 focus-visible:ring-0 focus-visible:ring-offset-0"
               >
-                <span className="truncate">
+                <span className="truncate whitespace-nowrap">
                   {vibeModel === "VibeOS Pro" ? (
                     <>
-                      <span className="hidden sm:inline">VibeOS </span>
+                      <span>VibeOS </span>
                       <span className="text-[#c9a574] font-semibold">Pro</span>
                     </>
                   ) : (
@@ -125,7 +125,7 @@ export function ChatCard({
                 <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 flex-shrink-0" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
+            <DropdownMenuContent align="start" side={hasMessages ? "top" : "bottom"}>
               <DropdownMenuItem onClick={() => setVibeModel("VibeOS")}>
                 VibeOS
               </DropdownMenuItem>
@@ -144,7 +144,7 @@ export function ChatCard({
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="h-8 sm:h-9 px-2 sm:px-2.5 rounded-lg bg-background border-border text-[10px] sm:text-xs font-medium min-w-0"
+                className="h-8 sm:h-9 px-2 sm:px-2.5 rounded-lg bg-background border-border text-[10px] sm:text-xs font-medium min-w-0 focus-visible:ring-0 focus-visible:ring-offset-0"
               >
                 <span className="truncate whitespace-nowrap flex items-center gap-1.5">
                   {selectedTool !== "Anything" && selectedTool !== "None" ? (
@@ -167,7 +167,7 @@ export function ChatCard({
                 <ChevronDown className="w-3 h-3 ml-1 flex-shrink-0" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" side="bottom" className="w-48">
+            <DropdownMenuContent align="start" side={hasMessages ? "top" : "bottom"} className="w-48 max-h-[300px] overflow-y-auto">
               {tools.map((tool) => (
                 <DropdownMenuItem
                   key={tool}
@@ -221,6 +221,7 @@ export function ChatCard({
                     paddingRight: '40px'
                   }}
                 >
+                  <option value="" disabled></option>
                   <option value="Anthropic">Anthropic</option>
                   <option value="DeepSeek">DeepSeek</option>
                   <option value="Gemini">Gemini</option>
@@ -238,7 +239,7 @@ export function ChatCard({
                   type="password"
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
-                  placeholder="sk-..."
+                  placeholder=""
                   className="w-full px-4 py-3 bg-background border border-border rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-ring"
                 />
               </div>
