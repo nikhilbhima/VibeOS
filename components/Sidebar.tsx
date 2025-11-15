@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Home, FolderKanban, Layers, User, ChevronLeft, Sun, Moon } from "lucide-react";
+import { Home, Folder, Layers, User, ChevronLeft, Sun, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
 
 interface SidebarProps {
@@ -72,7 +72,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
           }`}
           title="Workspace (coming soon)"
         >
-          <FolderKanban className="w-5 h-5 flex-shrink-0" />
+          <Folder className="w-5 h-5 flex-shrink-0" />
           {!isCollapsed && (
             <>
               <span className="font-medium">Workspace</span>

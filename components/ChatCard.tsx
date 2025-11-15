@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Paperclip, Send, Sparkles, SlidersHorizontal, ChevronDown, SquarePen } from "lucide-react";
+import { useTheme } from "next-themes";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ToolIcon } from "@/components/ToolIcons";
 
 interface ChatCardProps {
   selectedMode: string;
@@ -25,13 +27,16 @@ interface ChatCardProps {
 const tools = [
   "None",
   "Anything",
-  "Replit",
+  "Base44",
   "Bolt",
-  "Lovable",
   "Claude Code",
-  "v0",
-  "Cursor",
-  "Windsurf",
+  "Emergent Labs",
+  "Firebase Studio",
+  "Google AI Studio",
+  "Lovable",
+  "Replit",
+  "Rocket",
+  "V0 (Vercel)",
 ];
 
 export function ChatCard({
@@ -44,6 +49,7 @@ export function ChatCard({
   onNewChat,
   hasMessages = false,
 }: ChatCardProps) {
+  const { theme } = useTheme();
   const [vibeModel, setVibeModel] = useState("VibeOS Pro");
   const [showConnectModal, setShowConnectModal] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState("Anthropic");
@@ -153,7 +159,10 @@ export function ChatCard({
                   onClick={() => onToolChange(tool)}
                   className={selectedTool === tool ? "bg-accent" : ""}
                 >
-                  {tool}
+                  <div className="flex items-center gap-2">
+                    {tool !== "None" && <ToolIcon toolName={tool} className="w-4 h-4" />}
+                    <span>{tool}</span>
+                  </div>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
