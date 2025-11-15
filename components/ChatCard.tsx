@@ -95,6 +95,7 @@ export function ChatCard({
             onChange={(e) => onMessageChange(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Drop the idea here..."
+            autoFocus
             className="min-h-[85px] pl-10 sm:pl-12 pr-16 sm:pr-20 pt-3 sm:pt-4 pb-3 sm:pb-4 resize-none border-none focus-visible:ring-0 text-sm sm:text-base bg-transparent"
           />
         </div>
@@ -145,9 +146,23 @@ export function ChatCard({
                 variant="outline"
                 className="h-8 sm:h-9 px-2 sm:px-2.5 rounded-lg bg-background border-border text-[10px] sm:text-xs font-medium min-w-0"
               >
-                <SlidersHorizontal className="w-3 h-3 mr-1 flex-shrink-0" />
-                <span className="truncate whitespace-nowrap">
-                  Tool used{selectedTool !== "Anything" ? `: ${selectedTool}` : ""}
+                <span className="truncate whitespace-nowrap flex items-center gap-1.5">
+                  {selectedTool !== "Anything" && selectedTool !== "None" ? (
+                    <>
+                      <ToolIcon toolName={selectedTool} className="w-2 h-2 flex-shrink-0" />
+                      {selectedTool}
+                    </>
+                  ) : selectedTool === "Anything" ? (
+                    <>
+                      <ToolIcon toolName="Anything" className="w-2 h-2 flex-shrink-0" />
+                      Anything
+                    </>
+                  ) : (
+                    <>
+                      <SlidersHorizontal className="w-3 h-3 mr-1 flex-shrink-0" />
+                      Tool used
+                    </>
+                  )}
                 </span>
                 <ChevronDown className="w-3 h-3 ml-1 flex-shrink-0" />
               </Button>
@@ -160,7 +175,7 @@ export function ChatCard({
                   className={selectedTool === tool ? "bg-accent" : ""}
                 >
                   <div className="flex items-center gap-2">
-                    {tool !== "None" && <ToolIcon toolName={tool} className="w-4 h-4" />}
+                    {tool !== "None" && <ToolIcon toolName={tool} className="w-3 h-3" />}
                     <span>{tool}</span>
                   </div>
                 </DropdownMenuItem>

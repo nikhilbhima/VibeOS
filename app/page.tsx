@@ -1,17 +1,24 @@
 "use client";
 
-import { useState } from "react";
-import { Menu } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Menu, Sun, Moon } from "lucide-react";
+import { useTheme } from "next-themes";
 import { Sidebar } from "@/components/Sidebar";
 import { QuickActions } from "@/components/QuickActions";
 import { ChatCard } from "@/components/ChatCard";
 
 export default function Home() {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [selectedMode, setSelectedMode] = useState("Brainstorm");
   const [selectedTool, setSelectedTool] = useState("None");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Array<{ role: string; content: string }>>([]);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSend = () => {
     if (!message.trim()) return;
@@ -60,6 +67,21 @@ export default function Home() {
         </button>
         <h1 className="ml-3 text-lg font-semibold">VibeOS</h1>
       </div>
+
+      {/* Dark Mode Toggle - Top Right */}
+      {mounted && (
+        <button
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          className="fixed top-4 right-4 z-50 p-2 sm:p-2.5 rounded-lg bg-background border border-border hover:bg-accent transition-colors"
+          title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {theme === "dark" ? (
+            <Sun className="w-4 h-4 sm:w-5 sm:h-5" />
+          ) : (
+            <Moon className="w-4 h-4 sm:w-5 sm:h-5" />
+          )}
+        </button>
+      )}
 
       {/* Main Content */}
       <main

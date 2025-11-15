@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Home, Folder, Layers, User, ChevronLeft, Sun, Moon } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Home, Folder, Layers, User, ChevronLeft } from "lucide-react";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -10,7 +9,6 @@ interface SidebarProps {
 }
 
 export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
-  const { theme, setTheme } = useTheme();
 
   return (
     <>
@@ -101,21 +99,6 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
           )}
         </button>
       </nav>
-
-      {/* Theme Toggle */}
-      <button
-        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors mb-2 ${
-          isCollapsed ? "justify-center" : ""
-        }`}
-        title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-      >
-        {theme === "dark" ? (
-          <Sun className="w-5 h-5 flex-shrink-0" />
-        ) : (
-          <Moon className="w-5 h-5 flex-shrink-0" />
-        )}
-      </button>
 
       {/* User */}
       <button
