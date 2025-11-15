@@ -30,7 +30,7 @@ export function QuickActions({ selected, onSelect }: QuickActionsProps) {
             variant={isActive ? "default" : "outline"}
             onClick={() => onSelect(action.id)}
             className={`
-              h-10 px-4 rounded-xl font-medium text-sm transition-all flex items-center justify-center gap-1.5
+              h-9 sm:h-10 px-3 sm:px-4 rounded-xl font-medium text-xs sm:text-sm transition-all flex items-center justify-center gap-1 sm:gap-1.5
               ${
                 isActive
                   ? "bg-foreground text-background shadow-sm hover:bg-foreground/90"
@@ -38,8 +38,8 @@ export function QuickActions({ selected, onSelect }: QuickActionsProps) {
               }
             `}
           >
-            <Icon className="w-4 h-4 flex-shrink-0" />
-            <span>{action.label}</span>
+            <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+            <span className="whitespace-nowrap">{action.label}</span>
           </Button>
         );
       })}

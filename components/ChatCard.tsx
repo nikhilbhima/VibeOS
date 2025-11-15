@@ -63,24 +63,24 @@ export function ChatCard({
       <div className="p-4">
         <div className="relative">
           {/* Mode Indicator and New Chat - Top Right */}
-          <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
+          <div className="absolute top-2 sm:top-3 right-2 sm:right-3 z-10 flex items-center gap-1.5 sm:gap-2">
             {hasMessages && onNewChat && (
               <button
                 onClick={() => setShowNewChatModal(true)}
-                className="p-1.5 bg-background rounded-lg text-foreground border border-border hover:bg-accent hover:text-accent-foreground transition-colors"
+                className="p-1 sm:p-1.5 bg-background rounded-lg text-foreground border border-border hover:bg-accent hover:text-accent-foreground transition-colors"
                 title="New chat"
               >
-                <SquarePen className="w-4 h-4" />
+                <SquarePen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
             )}
-            <span className="px-3 py-1 bg-background rounded-lg text-xs font-medium text-foreground border border-border">
+            <span className="px-2 sm:px-3 py-0.5 sm:py-1 bg-background rounded-lg text-[10px] sm:text-xs font-medium text-foreground border border-border whitespace-nowrap">
               {selectedMode}
             </span>
           </div>
 
           {/* Paperclip Icon */}
-          <div className="absolute top-4 left-4 z-10">
-            <Paperclip className="w-5 h-5 text-muted-foreground" />
+          <div className="absolute top-3 sm:top-4 left-3 sm:left-4 z-10">
+            <Paperclip className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
           </div>
 
           {/* Textarea */}
@@ -89,31 +89,33 @@ export function ChatCard({
             onChange={(e) => onMessageChange(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Drop the idea here..."
-            className="min-h-[100px] pl-12 pr-20 pt-4 pb-4 resize-none border-none focus-visible:ring-0 text-base bg-transparent"
+            className="min-h-[100px] pl-10 sm:pl-12 pr-16 sm:pr-20 pt-3 sm:pt-4 pb-3 sm:pb-4 resize-none border-none focus-visible:ring-0 text-sm sm:text-base bg-transparent"
           />
         </div>
       </div>
 
       {/* Bottom Bar */}
-      <div className="px-4 pb-4 pt-2 bg-background/50 flex items-center justify-between gap-3">
+      <div className="px-4 pb-4 pt-2 bg-background/50 flex items-center justify-between gap-2">
         {/* Left: Dropdowns */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 flex-1 min-w-0">
           {/* VibeOS Model Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="h-9 px-3 rounded-lg bg-background border-border text-sm font-medium"
+                className="h-9 px-2 sm:px-3 rounded-lg bg-background border-border text-xs sm:text-sm font-medium min-w-0"
               >
-                {vibeModel === "VibeOS Pro" ? (
-                  <>
-                    <span>VibeOS </span>
-                    <span className="text-[#c9a574] font-semibold">Pro</span>
-                  </>
-                ) : (
-                  vibeModel
-                )}
-                <ChevronDown className="w-4 h-4 ml-2" />
+                <span className="truncate">
+                  {vibeModel === "VibeOS Pro" ? (
+                    <>
+                      <span className="hidden sm:inline">VibeOS </span>
+                      <span className="text-[#c9a574] font-semibold">Pro</span>
+                    </>
+                  ) : (
+                    vibeModel
+                  )}
+                </span>
+                <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 flex-shrink-0" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
@@ -135,11 +137,11 @@ export function ChatCard({
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="h-9 px-3 rounded-lg bg-background border-border text-sm font-medium"
+                className="h-9 px-2 sm:px-3 rounded-lg bg-background border-border text-xs sm:text-sm font-medium min-w-0 flex-1"
               >
-                <SlidersHorizontal className="w-4 h-4 mr-2" />
-                {selectedTool}
-                <ChevronDown className="w-4 h-4 ml-2" />
+                <SlidersHorizontal className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
+                <span className="truncate">{selectedTool}</span>
+                <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 flex-shrink-0" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" side="bottom" className="w-48">
@@ -160,7 +162,7 @@ export function ChatCard({
         <Button
           onClick={onSend}
           disabled={!message.trim()}
-          className="h-9 px-6 rounded-lg bg-foreground hover:bg-foreground/90 text-background flex items-center justify-center gap-2"
+          className="h-9 px-4 sm:px-6 rounded-lg bg-foreground hover:bg-foreground/90 text-background flex items-center justify-center gap-2 flex-shrink-0"
         >
           <span className="text-lg">→</span>
         </Button>

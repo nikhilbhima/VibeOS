@@ -69,14 +69,14 @@ export default function Home() {
       >
         {!hasStarted ? (
           // BEFORE first message - Centered layout
-          <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-8">
+          <div className="flex-1 flex flex-col items-center justify-center px-3 sm:px-4 md:px-8 pb-4">
             {/* Heading */}
-            <h1 className="text-2xl sm:text-3xl font-semibold text-center mb-8 text-foreground">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-center mb-6 sm:mb-8 text-foreground">
               What are you building today?
             </h1>
 
             {/* Quick Actions */}
-            <div className="w-full max-w-[900px] mb-6">
+            <div className="w-full max-w-[900px] mb-4 sm:mb-6">
               <QuickActions selected={selectedMode} onSelect={setSelectedMode} />
             </div>
 
@@ -96,8 +96,8 @@ export default function Home() {
           // AFTER first message - Messages at top, chat box at bottom
           <>
             {/* Messages Area - Scrollable */}
-            <div className="flex-1 overflow-y-auto px-4 sm:px-8 pt-8 pb-4">
-              <div className="w-full max-w-[900px] mx-auto space-y-3">
+            <div className="flex-1 overflow-y-auto px-3 sm:px-4 md:px-8 pt-4 sm:pt-8 pb-4">
+              <div className="w-full max-w-[900px] mx-auto space-y-2 sm:space-y-3">
                 {messages.map((msg, idx) => (
                   <div
                     key={idx}
@@ -105,7 +105,7 @@ export default function Home() {
                   >
                     <div
                       className={`
-                        max-w-[85%] px-4 py-3 rounded-2xl text-sm
+                        max-w-[90%] sm:max-w-[85%] px-3 sm:px-4 py-2 sm:py-3 rounded-2xl text-xs sm:text-sm
                         ${
                           msg.role === "user"
                             ? "bg-accent text-accent-foreground"
@@ -121,8 +121,8 @@ export default function Home() {
             </div>
 
             {/* Bottom Section - Fixed at bottom */}
-            <div className="bg-background px-4 sm:px-8 py-4">
-              <div className="w-full max-w-[900px] mx-auto space-y-4">
+            <div className="bg-background px-3 sm:px-4 md:px-8 py-3 sm:py-4">
+              <div className="w-full max-w-[900px] mx-auto space-y-3 sm:space-y-4">
                 {/* Quick Actions */}
                 <QuickActions selected={selectedMode} onSelect={setSelectedMode} />
 
