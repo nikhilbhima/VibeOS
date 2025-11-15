@@ -41,6 +41,8 @@ export function ChatCard({
 }: ChatCardProps) {
   const [vibeModel, setVibeModel] = useState("VibeOS Pro");
   const [showConnectModal, setShowConnectModal] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState("DeepSeek");
+  const [apiKey, setApiKey] = useState("");
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -145,68 +147,80 @@ export function ChatCard({
       {/* Connect AI Modal */}
       {showConnectModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowConnectModal(false)}>
-          <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-md m-4" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-xl font-semibold text-card-foreground mb-4">Connect your AI</h2>
-            <p className="text-sm text-muted-foreground mb-6">
-              Connect your own AI models by providing your API keys below.
+          <div className="bg-card border border-border rounded-2xl p-8 w-full max-w-lg m-4" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-2xl font-semibold text-card-foreground mb-2">Connect your AI</h2>
+            <p className="text-sm text-muted-foreground mb-8">
+              Use any supported provider. Your key is stored only in this browser and sent with requests to VibeOS. You can remove it any time.
             </p>
 
-            <div className="space-y-4">
-              {/* OpenAI */}
+            <div className="space-y-6">
+              {/* Provider Dropdown */}
               <div>
-                <label className="text-sm font-medium text-card-foreground block mb-2">
-                  OpenAI API Key
+                <label className="text-sm font-medium text-card-foreground block mb-3">
+                  Provider
+                </label>
+                <select
+                  value={selectedProvider}
+                  onChange={(e) => setSelectedProvider(e.target.value)}
+                  className="w-full px-4 py-3 bg-background border border-border rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-ring appearance-none cursor-pointer"
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'right 12px center',
+                    backgroundSize: '20px',
+                    paddingRight: '40px'
+                  }}
+                >
+                  <option value="DeepSeek">DeepSeek</option>
+                  <option value="Anthropic">Anthropic</option>
+                  <option value="Gemini">Gemini</option>
+                  <option value="Grok">Grok</option>
+                  <option value="OpenAI">OpenAI</option>
+                </select>
+              </div>
+
+              {/* API Key Input */}
+              <div>
+                <label className="text-sm font-medium text-card-foreground block mb-3">
+                  API key
                 </label>
                 <input
                   type="password"
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
                   placeholder="sk-..."
-                  className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                />
-              </div>
-
-              {/* Anthropic */}
-              <div>
-                <label className="text-sm font-medium text-card-foreground block mb-2">
-                  Anthropic API Key
-                </label>
-                <input
-                  type="password"
-                  placeholder="sk-ant-..."
-                  className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                />
-              </div>
-
-              {/* Google */}
-              <div>
-                <label className="text-sm font-medium text-card-foreground block mb-2">
-                  Google AI API Key
-                </label>
-                <input
-                  type="password"
-                  placeholder="AIza..."
-                  className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full px-4 py-3 bg-background border border-border rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-ring"
                 />
               </div>
             </div>
 
-            <div className="flex gap-3 mt-6">
+            <div className="flex gap-3 mt-8">
               <Button
-                onClick={() => setShowConnectModal(false)}
+                onClick={() => {
+                  setShowConnectModal(false);
+                  setApiKey("");
+                }}
                 variant="outline"
-                className="flex-1 h-10 rounded-lg"
+                className="flex-1 h-11 rounded-lg text-base"
               >
                 Cancel
               </Button>
               <Button
                 onClick={() => {
-                  // TODO: Save API keys
+                  // TODO: Save API key to localStorage
+                  console.log("Saving API key for", selectedProvider);
                   setShowConnectModal(false);
+                  setApiKey("");
                 }}
-                className="flex-1 h-10 rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground"
+                className="flex-1 h-11 rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground text-base font-medium"
               >
-                Connect
+                Save
               </Button>
             </div>
+
+            <p className="text-xs text-muted-foreground mt-6">
+              Supported now: Anthropic, DeepSeek, Gemini, Grok, OpenAI.
+            </p>
           </div>
         </div>
       )}
