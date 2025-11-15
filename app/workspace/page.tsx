@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Search, Filter, Grid, List, Clock, CheckCircle2, Circle, AlertCircle } from "lucide-react";
+import { Plus, Search, Filter, Grid, List, Clock, CheckCircle2, Circle, AlertCircle, Users, Settings, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // Mock data for demonstration
@@ -66,9 +66,26 @@ const mockProjects = [
   },
 ];
 
+// Mock team members
+const mockTeamMembers = [
+  { id: 1, name: "You", email: "you@example.com", avatar: "Y", role: "Owner", status: "online" },
+  { id: 2, name: "Sarah Chen", email: "sarah@example.com", avatar: "S", role: "Admin", status: "online" },
+  { id: 3, name: "Alex Kumar", email: "alex@example.com", avatar: "A", role: "Editor", status: "offline" },
+];
+
+// Mock activity feed
+const mockActivity = [
+  { id: 1, user: "Sarah Chen", action: "completed Phase 2", project: "E-commerce Platform", timestamp: "2 hours ago", type: "phase" },
+  { id: 2, user: "You", action: "created new project", project: "Portfolio Website", timestamp: "3 hours ago", type: "project" },
+  { id: 3, user: "Alex Kumar", action: "added comment on", project: "Task Management App", timestamp: "5 hours ago", type: "comment" },
+  { id: 4, user: "Sarah Chen", action: "marked check complete", project: "E-commerce Platform", timestamp: "1 day ago", type: "check" },
+  { id: 5, user: "You", action: "started Phase 3", project: "E-commerce Platform", timestamp: "1 day ago", type: "phase" },
+];
+
 export default function WorkspacePage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [searchQuery, setSearchQuery] = useState("");
+  const [showTeamModal, setShowTeamModal] = useState(false);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -101,13 +118,23 @@ export default function WorkspacePage() {
             <div>
               <h1 className="text-3xl font-semibold text-foreground">Workspace</h1>
               <p className="text-sm text-muted-foreground mt-1">
-                Track your projects, manage phases, and maintain context
+                Track your projects, manage phases, and collaborate with your team
               </p>
             </div>
-            <Button className="bg-foreground text-background hover:bg-foreground/90">
-              <Plus className="w-4 h-4 mr-2" />
-              New Project
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                className="gap-2"
+                onClick={() => setShowTeamModal(true)}
+              >
+                <Users className="w-4 h-4" />
+                Team ({mockTeamMembers.length})
+              </Button>
+              <Button className="bg-foreground text-background hover:bg-foreground/90">
+                <Plus className="w-4 h-4 mr-2" />
+                New Project
+              </Button>
+            </div>
           </div>
 
           {/* Search and Filters */}
@@ -199,6 +226,43 @@ export default function WorkspacePage() {
               <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
                 <Clock className="w-5 h-5 text-purple-500" />
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Activity Feed */}
+        <div className="px-6 pb-4">
+          <div className="bg-card border border-border rounded-xl p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold">Recent Activity</h3>
+              <button className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+                View All
+              </button>
+            </div>
+            <div className="space-y-3">
+              {mockActivity.slice(0, 5).map((activity) => (
+                <div key={activity.id} className="flex items-start gap-3">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                    activity.type === "phase" ? "bg-blue-500/10 text-blue-500" :
+                    activity.type === "project" ? "bg-green-500/10 text-green-500" :
+                    activity.type === "comment" ? "bg-purple-500/10 text-purple-500" :
+                    "bg-orange-500/10 text-orange-500"
+                  }`}>
+                    {activity.type === "phase" && <CheckCircle2 className="w-4 h-4" />}
+                    {activity.type === "project" && <Plus className="w-4 h-4" />}
+                    {activity.type === "comment" && <MessageSquare className="w-4 h-4" />}
+                    {activity.type === "check" && <CheckCircle2 className="w-4 h-4" />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm">
+                      <span className="font-medium">{activity.user}</span>{" "}
+                      <span className="text-muted-foreground">{activity.action}</span>{" "}
+                      <span className="font-medium">{activity.project}</span>
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{activity.timestamp}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -331,6 +395,116 @@ export default function WorkspacePage() {
           </div>
         )}
       </div>
+
+      {/* Team Modal */}
+      {showTeamModal && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          onClick={() => setShowTeamModal(false)}
+        >
+          <div
+            className="bg-card border border-border rounded-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-border">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold">Team Members</h2>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Manage workspace access and permissions
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  className="gap-2"
+                  onClick={() => setShowTeamModal(false)}
+                >
+                  <Plus className="w-4 h-4" />
+                  Invite Member
+                </Button>
+              </div>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 overflow-y-auto max-h-[calc(80vh-120px)]">
+              <div className="space-y-3">
+                {mockTeamMembers.map((member) => (
+                  <div
+                    key={member.id}
+                    className="flex items-center gap-4 p-4 rounded-xl border border-border hover:bg-accent/50 transition-colors"
+                  >
+                    {/* Avatar */}
+                    <div className="relative">
+                      <div className="w-12 h-12 rounded-full bg-blue-500/10 border-2 border-blue-500 flex items-center justify-center">
+                        <span className="text-lg font-semibold text-blue-500">
+                          {member.avatar}
+                        </span>
+                      </div>
+                      {member.status === "online" && (
+                        <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-card rounded-full" />
+                      )}
+                    </div>
+
+                    {/* Member Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-medium truncate">{member.name}</h3>
+                        {member.role === "Owner" && (
+                          <span className="px-2 py-0.5 bg-purple-500/10 text-purple-500 text-xs font-medium rounded">
+                            Owner
+                          </span>
+                        )}
+                        {member.role === "Admin" && (
+                          <span className="px-2 py-0.5 bg-blue-500/10 text-blue-500 text-xs font-medium rounded">
+                            Admin
+                          </span>
+                        )}
+                        {member.role === "Editor" && (
+                          <span className="px-2 py-0.5 bg-green-500/10 text-green-500 text-xs font-medium rounded">
+                            Editor
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground truncate">{member.email}</p>
+                    </div>
+
+                    {/* Actions */}
+                    {member.role !== "Owner" && (
+                      <Button variant="outline" size="sm">
+                        <Settings className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Permissions Info */}
+              <div className="mt-6 p-4 bg-accent/30 rounded-xl border border-border">
+                <h4 className="font-medium text-sm mb-3">Permission Levels</h4>
+                <div className="space-y-2 text-xs text-muted-foreground">
+                  <div className="flex items-start gap-2">
+                    <span className="font-medium text-purple-500">Owner:</span>
+                    <span>Full access including billing and workspace deletion</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="font-medium text-blue-500">Admin:</span>
+                    <span>Manage members, settings, and all projects</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="font-medium text-green-500">Editor:</span>
+                    <span>Create and edit projects, cannot manage members</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="font-medium text-orange-500">Viewer:</span>
+                    <span>View-only access to all projects</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

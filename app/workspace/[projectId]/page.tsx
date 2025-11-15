@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, RotateCcw, Download, Share2, MoreVertical, CheckCircle2, Circle, PlayCircle, Calendar, MessageSquare, FileText, Settings } from "lucide-react";
+import { ArrowLeft, RotateCcw, Download, Share2, MoreVertical, CheckCircle2, Circle, PlayCircle, Calendar, MessageSquare, FileText, Settings, Send, Link2, Mail, Copy, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
@@ -92,9 +92,30 @@ const mockProject = {
   ],
 };
 
+// Mock comments
+const mockComments = [
+  {
+    id: 1,
+    user: { name: "Sarah Chen", avatar: "S" },
+    content: "Should we add pagination to the product listing?",
+    timestamp: "2 hours ago",
+    phaseId: 3,
+  },
+  {
+    id: 2,
+    user: { name: "You", avatar: "Y" },
+    content: "Good idea! I'll add that to the manual checks.",
+    timestamp: "1 hour ago",
+    phaseId: 3,
+  },
+];
+
 export default function ProjectDetailPage({ params }: { params: { projectId: string } }) {
   const router = useRouter();
   const [selectedPhaseId, setSelectedPhaseId] = useState(mockProject.currentPhaseId);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [showComments, setShowComments] = useState(true);
+  const [newComment, setNewComment] = useState("");
 
   const selectedPhase = mockProject.phases.find((p) => p.id === selectedPhaseId) || mockProject.phases[0];
   const completedChecks = selectedPhase.checks.filter((c) => c.completed).length;
@@ -140,7 +161,11 @@ export default function ProjectDetailPage({ params }: { params: { projectId: str
               <p className="text-sm text-muted-foreground mt-0.5">{mockProject.description}</p>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" className="gap-2">
+              <Button
+                variant="outline"
+                className="gap-2"
+                onClick={() => setShowShareModal(true)}
+              >
                 <Share2 className="w-4 h-4" />
                 Share
               </Button>
@@ -357,9 +382,172 @@ export default function ProjectDetailPage({ params }: { params: { projectId: str
                 </Button>
               </div>
             </div>
+
+            {/* Comments Section */}
+            {showComments && (
+              <div className="bg-card border border-border rounded-xl p-6 mt-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold">Comments</h3>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowComments(false)}
+                  >
+                    Hide
+                  </Button>
+                </div>
+
+                {/* Comments List */}
+                <div className="space-y-4 mb-4">
+                  {mockComments
+                    .filter((c) => c.phaseId === selectedPhaseId)
+                    .map((comment) => (
+                      <div key={comment.id} className="flex gap-3">
+                        <div className="w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500 flex items-center justify-center flex-shrink-0">
+                          <span className="text-sm font-semibold text-blue-500">
+                            {comment.user.avatar}
+                          </span>
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-medium text-sm">{comment.user.name}</span>
+                            <span className="text-xs text-muted-foreground">{comment.timestamp}</span>
+                          </div>
+                          <p className="text-sm text-foreground">{comment.content}</p>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+
+                {/* Add Comment */}
+                <div className="flex gap-2 pt-4 border-t border-border">
+                  <input
+                    type="text"
+                    placeholder="Add a comment..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    className="flex-1 px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  />
+                  <Button size="sm" className="gap-2">
+                    <Send className="w-3.5 h-3.5" />
+                    Send
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Share Project Modal */}
+      {showShareModal && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          onClick={() => setShowShareModal(false)}
+        >
+          <div
+            className="bg-card border border-border rounded-2xl w-full max-w-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-border">
+              <h2 className="text-xl font-semibold">Share Project</h2>
+              <p className="text-sm text-muted-foreground mt-1">
+                Invite team members to collaborate on this project
+              </p>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 space-y-6">
+              {/* Share Link */}
+              <div>
+                <label className="text-sm font-medium block mb-2">Share Link</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value="https://vibeos.app/project/abc123"
+                    readOnly
+                    className="flex-1 px-3 py-2 bg-background border border-border rounded-lg text-sm"
+                  />
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Copy className="w-4 h-4" />
+                    Copy
+                  </Button>
+                </div>
+              </div>
+
+              {/* Invite by Email */}
+              <div>
+                <label className="text-sm font-medium block mb-2">Invite by Email</label>
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    placeholder="colleague@example.com"
+                    className="flex-1 px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  />
+                  <Button size="sm" className="gap-2">
+                    <Mail className="w-4 h-4" />
+                    Invite
+                  </Button>
+                </div>
+              </div>
+
+              {/* Permission Level */}
+              <div>
+                <label className="text-sm font-medium block mb-2">Access Level</label>
+                <select className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring">
+                  <option value="viewer">Viewer - Can view only</option>
+                  <option value="editor">Editor - Can edit and comment</option>
+                  <option value="admin">Admin - Full access</option>
+                </select>
+              </div>
+
+              {/* Current Collaborators */}
+              <div>
+                <h4 className="text-sm font-medium mb-3">Current Collaborators (3)</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors">
+                    <div className="w-8 h-8 rounded-full bg-purple-500/10 border border-purple-500 flex items-center justify-center">
+                      <span className="text-sm font-semibold text-purple-500">Y</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium">You</p>
+                      <p className="text-xs text-muted-foreground">Owner</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors">
+                    <div className="w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500 flex items-center justify-center">
+                      <span className="text-sm font-semibold text-blue-500">S</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium">Sarah Chen</p>
+                      <p className="text-xs text-muted-foreground">Admin</p>
+                    </div>
+                    <Button variant="ghost" size="sm">Remove</Button>
+                  </div>
+                  <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors">
+                    <div className="w-8 h-8 rounded-full bg-green-500/10 border border-green-500 flex items-center justify-center">
+                      <span className="text-sm font-semibold text-green-500">A</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium">Alex Kumar</p>
+                      <p className="text-xs text-muted-foreground">Editor</p>
+                    </div>
+                    <Button variant="ghost" size="sm">Remove</Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 border-t border-border flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setShowShareModal(false)}>
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
