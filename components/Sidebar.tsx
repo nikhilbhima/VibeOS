@@ -18,8 +18,12 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
         isCollapsed ? "w-[80px]" : "w-[280px]"
       }`}
     >
-      {/* Logo and Title */}
-      <div className="flex items-center gap-3 mb-2">
+      {/* Logo and Title - Click to toggle */}
+      <button
+        onClick={onToggle}
+        className="flex items-center gap-3 mb-6 hover:opacity-80 transition-opacity"
+        title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+      >
         <div className="w-14 h-14 rounded-xl overflow-hidden bg-accent flex-shrink-0 flex items-center justify-center">
           <span className="text-2xl font-bold text-accent-foreground">V</span>
         </div>
@@ -28,28 +32,11 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
             <h1 className="text-xl font-semibold text-sidebar-foreground truncate">
               VibeOS
             </h1>
+            <p className="text-sm text-sidebar-foreground/70 mt-0.5">
+              The ultimate vibe-coding system
+            </p>
           </div>
         )}
-      </div>
-
-      {/* Tagline */}
-      {!isCollapsed && (
-        <p className="text-sm text-sidebar-foreground/70 mb-6 px-1">
-          The ultimate vibe-coding system
-        </p>
-      )}
-
-      {/* Collapse Toggle */}
-      <button
-        onClick={onToggle}
-        className={`mb-4 flex items-center justify-center w-10 h-10 rounded-xl text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors ${
-          isCollapsed ? "mx-auto" : "ml-auto"
-        }`}
-        title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-      >
-        <ChevronLeft
-          className={`w-5 h-5 transition-transform ${isCollapsed ? "rotate-180" : ""}`}
-        />
       </button>
 
       {/* Navigation */}

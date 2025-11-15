@@ -33,12 +33,12 @@ export function QuickActions({ selected, onSelect }: QuickActionsProps) {
               h-10 px-4 rounded-xl font-medium text-sm transition-all flex items-center justify-center
               ${
                 isActive
-                  ? "bg-accent text-accent-foreground shadow-sm"
-                  : "bg-card border-border hover:bg-accent/10"
+                  ? "bg-accent text-accent-foreground shadow-sm hover:bg-accent/90"
+                  : "bg-card border-border hover:bg-muted hover:text-foreground"
               }
             `}
           >
-            <Icon className="w-4 h-4 mr-2 flex-shrink-0" />
+            <Icon className="w-4 h-4 mr-1.5 flex-shrink-0" />
             <span>{action.label}</span>
           </Button>
         );
