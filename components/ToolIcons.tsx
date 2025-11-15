@@ -1,5 +1,6 @@
 // Tool icon components for the dropdown menu
 // Icons reference SVG files in the "Tool dropdown Icons/Light Mode" folder
+// Dark mode is handled by CSS filter inversion
 
 interface IconProps {
   className?: string;
@@ -31,7 +32,7 @@ export const ToolIcon = ({ className, toolName }: IconProps) => {
     <img
       src={`/Tool%20dropdown%20Icons/Light%20Mode/${encodeURIComponent(svgFileName)}`}
       alt={`${toolName} icon`}
-      className={className}
+      className={`${className} dark:invert`}
       style={{ width: '1rem', height: '1rem', objectFit: 'contain' }}
     />
   );

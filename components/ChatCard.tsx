@@ -147,7 +147,7 @@ export function ChatCard({
               >
                 <SlidersHorizontal className="w-3 h-3 mr-1 flex-shrink-0" />
                 <span className="truncate whitespace-nowrap">
-                  Tool used{selectedTool !== "Anything" && selectedTool !== "None" ? `: ${selectedTool}` : selectedTool === "None" ? ": None" : ""}
+                  Tool used{selectedTool !== "Anything" ? `: ${selectedTool}` : ""}
                 </span>
                 <ChevronDown className="w-3 h-3 ml-1 flex-shrink-0" />
               </Button>
