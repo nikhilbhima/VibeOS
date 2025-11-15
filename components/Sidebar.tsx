@@ -21,7 +21,9 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
       {/* Logo and Title - Click to toggle */}
       <button
         onClick={onToggle}
-        className="flex items-center gap-3 mb-6 hover:opacity-80 transition-opacity w-full"
+        className={`flex items-center gap-3 mb-6 hover:opacity-80 transition-opacity w-full ${
+          isCollapsed ? "justify-center" : ""
+        }`}
         title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
       >
         <div className="w-12 h-12 rounded-xl overflow-hidden bg-accent flex-shrink-0 flex items-center justify-center">
@@ -29,10 +31,10 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
         </div>
         {!isCollapsed && (
           <div className="flex-1 min-w-0">
-            <h1 className="text-lg font-semibold text-sidebar-foreground">
+            <h1 className="text-lg font-semibold text-sidebar-foreground text-left">
               VibeOS
             </h1>
-            <p className="text-xs text-sidebar-foreground/70 leading-tight">
+            <p className="text-xs text-sidebar-foreground/70 leading-tight text-left">
               The ultimate vibe-coding system
             </p>
           </div>
