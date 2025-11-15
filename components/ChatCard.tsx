@@ -21,6 +21,7 @@ interface ChatCardProps {
 }
 
 const tools = [
+  "None",
   "Anything",
   "Replit",
   "Bolt",
