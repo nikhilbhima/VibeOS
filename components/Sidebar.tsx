@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Home, Folder, Layers, User, ChevronDown, Check } from "lucide-react";
@@ -20,8 +20,13 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [selectedWorkspace, setSelectedWorkspace] = useState(mockWorkspaces[0]);
   const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isActive = (path: string) => pathname === path || pathname?.startsWith(path + "/");
 
@@ -54,7 +59,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
           isCollapsed ? "w-10 h-10" : "w-12 h-12"
         }`}>
           <img
-            src={theme === 'dark' ? "/vibeos-logo-dark.svg" : "/vibeos-logo-light.svg"}
+            src={!mounted || theme === 'dark' ? "/vibeos-logo-dark.svg" : "/vibeos-logo-light.svg"}
             alt="VibeOS Logo"
             className={isCollapsed ? "w-10 h-10" : "w-12 h-12"}
           />
