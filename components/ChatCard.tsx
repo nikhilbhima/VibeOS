@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ToolIcon } from "@/components/ToolIcons";
+import { useAccessGate } from "./AccessGate";
 
 interface ChatCardProps {
   selectedMode: string;
@@ -48,6 +49,7 @@ export function ChatCard({
   onNewChat,
   hasMessages = false,
 }: ChatCardProps) {
+  const { hasAccess, requestAccess } = useAccessGate();
   const [vibeModel, setVibeModel] = useState("VibeOS Pro");
   const [showConnectModal, setShowConnectModal] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState("");
@@ -57,8 +59,20 @@ export function ChatCard({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
+      if (!hasAccess) {
+        requestAccess();
+        return;
+      }
       onSend();
     }
+  };
+
+  const handleSend = () => {
+    if (!hasAccess) {
+      requestAccess();
+      return;
+    }
+    onSend();
   };
 
   return (
@@ -184,7 +198,7 @@ export function ChatCard({
 
         {/* Right: Send Button */}
         <Button
-          onClick={onSend}
+          onClick={handleSend}
           disabled={!message.trim()}
           className="h-9 px-4 sm:px-6 rounded-lg bg-foreground hover:bg-foreground/90 text-background flex items-center justify-center gap-2 flex-shrink-0"
         >

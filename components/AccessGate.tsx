@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { Lock } from "lucide-react";
 
 /**
  * AccessGate Component
  *
- * This component blocks access to the app until the correct code is entered.
+ * This component provides selective access control for the app.
  * Access code: "360"
  *
  * TO REMOVE THIS ACCESS GATE:
@@ -17,8 +17,27 @@ import { Lock } from "lucide-react";
 const ACCESS_CODE = "360";
 const STORAGE_KEY = "vibeos_access_granted";
 
+interface AccessGateContextType {
+  hasAccess: boolean;
+  requestAccess: () => void;
+}
+
+const AccessGateContext = createContext<AccessGateContextType | null>(null);
+
+export function useAccessGate() {
+  const context = useContext(AccessGateContext);
+  if (!context) {
+    // Return default values during SSR or before AccessGate mounts
+    return {
+      hasAccess: true, // Default to true to prevent blocking during SSR
+      requestAccess: () => {},
+    };
+  }
+  return context;
+}
+
 export function AccessGate({ children }: { children: React.ReactNode }) {
-  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [hasAccess, setHasAccess] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
@@ -32,22 +51,17 @@ export function AccessGate({ children }: { children: React.ReactNode }) {
 
     // Check if user already has access
     if (typeof window !== "undefined") {
-      const hasAccess = localStorage.getItem(STORAGE_KEY) === "true";
-      setIsUnlocked(hasAccess);
+      const hasStoredAccess = localStorage.getItem(STORAGE_KEY) === "true";
+      setHasAccess(hasStoredAccess);
     }
   }, []);
-
-  // If access gate is disabled, render children directly
-  if (!accessRequired || isUnlocked) {
-    return <>{children}</>;
-  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (code === ACCESS_CODE) {
       localStorage.setItem(STORAGE_KEY, "true");
-      setIsUnlocked(true);
+      setHasAccess(true);
       setShowModal(false);
       setError("");
     } else {
@@ -56,16 +70,15 @@ export function AccessGate({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const handleInteraction = (e: React.MouseEvent | React.FocusEvent) => {
-    // Allow certain elements to work without access
-    const target = e.target as HTMLElement;
-    const allowedElements = ["HTML", "BODY"];
+  const requestAccess = () => {
+    if (!accessRequired || hasAccess) return;
+    setShowModal(true);
+  };
 
-    if (!allowedElements.includes(target.tagName)) {
-      e.preventDefault();
-      e.stopPropagation();
-      setShowModal(true);
-    }
+  // If access gate is disabled, provide unrestricted access
+  const contextValue: AccessGateContextType = {
+    hasAccess: !accessRequired || hasAccess,
+    requestAccess,
   };
 
   if (!mounted) {
@@ -73,15 +86,8 @@ export function AccessGate({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <>
-      {/* Locked overlay - prevents interactions */}
-      <div
-        onClick={handleInteraction}
-        onFocus={handleInteraction}
-        style={{ cursor: "default" }}
-      >
-        {children}
-      </div>
+    <AccessGateContext.Provider value={contextValue}>
+      {children}
 
       {/* Access Code Modal */}
       {showModal && (
@@ -158,6 +164,6 @@ export function AccessGate({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       )}
-    </>
+    </AccessGateContext.Provider>
   );
 }

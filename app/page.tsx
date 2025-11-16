@@ -6,9 +6,11 @@ import { useTheme } from "next-themes";
 import { Sidebar } from "@/components/Sidebar";
 import { QuickActions } from "@/components/QuickActions";
 import { ChatCard } from "@/components/ChatCard";
+import { useAccessGate } from "@/components/AccessGate";
 
 export default function Home() {
   const { theme, setTheme } = useTheme();
+  const { hasAccess, requestAccess } = useAccessGate();
   const [mounted, setMounted] = useState(false);
   const [selectedMode, setSelectedMode] = useState("Brainstorm");
   const [selectedTool, setSelectedTool] = useState("None");
@@ -75,6 +77,11 @@ export default function Home() {
         <div className="fixed top-4 right-4 z-50 flex items-center gap-1.5 sm:gap-2">
           {/* Sign In Button */}
           <button
+            onClick={() => {
+              if (!hasAccess) {
+                requestAccess();
+              }
+            }}
             className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg bg-background border border-border hover:bg-accent transition-colors text-[10px] sm:text-xs font-medium"
             title="Sign in"
           >
@@ -83,6 +90,11 @@ export default function Home() {
 
           {/* Sign Up Button */}
           <button
+            onClick={() => {
+              if (!hasAccess) {
+                requestAccess();
+              }
+            }}
             className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg bg-foreground text-background hover:bg-foreground/90 transition-colors text-[10px] sm:text-xs font-medium"
             title="Sign up"
           >

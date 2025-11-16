@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Home, Folder, Layers, User, ChevronDown, Check } from "lucide-react";
+import { useAccessGate } from "./AccessGate";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -20,6 +21,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { theme } = useTheme();
+  const { hasAccess, requestAccess } = useAccessGate();
   const [mounted, setMounted] = useState(false);
   const [selectedWorkspace, setSelectedWorkspace] = useState(mockWorkspaces[0]);
   const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
@@ -29,6 +31,14 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
   }, []);
 
   const isActive = (path: string) => pathname === path || pathname?.startsWith(path + "/");
+
+  const handleNavigation = (path: string) => {
+    if (!hasAccess) {
+      requestAccess();
+      return;
+    }
+    router.push(path);
+  };
 
   return (
     <>
@@ -77,20 +87,17 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
         <div className="relative mb-4">
           <button
             onClick={() => setShowWorkspaceDropdown(!showWorkspaceDropdown)}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-sidebar-accent/50 hover:bg-sidebar-accent transition-colors"
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-sidebar-border hover:bg-sidebar-accent/30 transition-colors"
           >
-            <div className={`w-6 h-6 rounded ${selectedWorkspace.color} flex items-center justify-center flex-shrink-0`}>
-              <span className={`text-xs font-bold ${selectedWorkspace.textColor}`}>{selectedWorkspace.icon}</span>
-            </div>
             <span className="flex-1 text-sm font-medium text-sidebar-foreground truncate text-left">
               {selectedWorkspace.name}
             </span>
-            <ChevronDown className="w-4 h-4 text-sidebar-foreground flex-shrink-0" />
+            <ChevronDown className="w-4 h-4 text-sidebar-foreground/70 flex-shrink-0" />
           </button>
 
           {/* Workspace Dropdown */}
           {showWorkspaceDropdown && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-sidebar border border-sidebar-border rounded-xl shadow-lg z-50 overflow-hidden">
+            <div className="absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-xl shadow-lg z-50 overflow-hidden">
               {mockWorkspaces.map((workspace) => (
                 <button
                   key={workspace.id}
@@ -100,14 +107,14 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                   }}
                   className={`w-full flex items-center gap-2 px-3 py-2.5 transition-colors ${
                     selectedWorkspace.id === workspace.id
-                      ? "bg-sidebar-accent"
-                      : "hover:bg-sidebar-accent/50"
+                      ? "bg-accent text-accent-foreground"
+                      : "hover:bg-accent hover:text-accent-foreground"
                   }`}
                 >
                   <div className={`w-6 h-6 rounded ${workspace.color} flex items-center justify-center flex-shrink-0`}>
                     <span className={`text-xs font-bold ${workspace.textColor}`}>{workspace.icon}</span>
                   </div>
-                  <span className="flex-1 text-sm text-sidebar-foreground truncate text-left">
+                  <span className="flex-1 text-sm truncate text-left">
                     {workspace.name}
                   </span>
                   {selectedWorkspace.id === workspace.id && (
@@ -115,7 +122,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                   )}
                 </button>
               ))}
-              <div className="border-t border-sidebar-border px-3 py-2">
+              <div className="border-t border-border px-3 py-2">
                 <button className="w-full text-left text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
                   + New Workspace
                 </button>
@@ -129,7 +136,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
       <nav className="flex-1 space-y-2">
         {/* Home */}
         <button
-          onClick={() => router.push("/")}
+          onClick={() => handleNavigation("/")}
           className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-colors ${
             isActive("/") && !isActive("/workspace")
               ? "bg-sidebar-accent text-sidebar-accent-foreground"
@@ -143,7 +150,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
 
         {/* Workspace */}
         <button
-          onClick={() => router.push("/workspace")}
+          onClick={() => handleNavigation("/workspace")}
           className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-colors ${
             isActive("/workspace")
               ? "bg-sidebar-accent text-sidebar-accent-foreground"
@@ -157,7 +164,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
 
         {/* Prompt Library */}
         <button
-          onClick={() => router.push("/prompt-library")}
+          onClick={() => handleNavigation("/prompt-library")}
           className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-colors ${
             isActive("/prompt-library")
               ? "bg-sidebar-accent text-sidebar-accent-foreground"
@@ -172,6 +179,11 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
 
       {/* User */}
       <button
+        onClick={() => {
+          if (!hasAccess) {
+            requestAccess();
+          }
+        }}
         className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors ${
           isCollapsed ? "justify-center" : ""
         }`}
