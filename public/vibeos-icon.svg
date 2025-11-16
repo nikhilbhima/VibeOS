@@ -1,7 +1,39 @@
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Simple V with modern geometric style -->
-  <path d="M8 6 L16 24 L24 6" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <defs>
+    <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF006E;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8338EC;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3A86FF;stop-opacity:1" />
+    </linearGradient>
 
-  <!-- Accent dot -->
-  <circle cx="16" cy="27" r="1.5" fill="currentColor"/>
+    <filter id="iconGlow">
+      <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Shadow layer -->
+  <path d="M8 6 L16 26 L24 6"
+        stroke="#8338EC"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"
+        opacity="0.3"
+        transform="translate(0.5, 0.5)"/>
+
+  <!-- Main V -->
+  <path d="M8 6 L16 26 L24 6"
+        stroke="url(#iconGradient)"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"
+        filter="url(#iconGlow)"/>
+
+  <!-- Neon dot -->
+  <circle cx="16" cy="28" r="1.2" fill="url(#iconGradient)" filter="url(#iconGlow)"/>
 </svg>
