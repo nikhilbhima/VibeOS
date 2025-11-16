@@ -10,9 +10,9 @@ interface SidebarProps {
 }
 
 const mockWorkspaces = [
-  { id: 1, name: "Personal Projects", icon: "P", color: "bg-blue-500" },
-  { id: 2, name: "Team Workspace", icon: "T", color: "bg-purple-500" },
-  { id: 3, name: "Client Work", icon: "C", color: "bg-green-500" },
+  { id: 1, name: "Personal Projects", icon: "P", color: "bg-blue-500/20 border border-blue-500/50", textColor: "text-blue-600 dark:text-blue-400" },
+  { id: 2, name: "Team Workspace", icon: "T", color: "bg-purple-500/20 border border-purple-500/50", textColor: "text-purple-600 dark:text-purple-400" },
+  { id: 3, name: "Client Work", icon: "C", color: "bg-green-500/20 border border-green-500/50", textColor: "text-green-600 dark:text-green-400" },
 ];
 
 export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
@@ -75,7 +75,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
             className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-sidebar-accent/50 hover:bg-sidebar-accent transition-colors"
           >
             <div className={`w-6 h-6 rounded ${selectedWorkspace.color} flex items-center justify-center flex-shrink-0`}>
-              <span className="text-xs font-bold text-white">{selectedWorkspace.icon}</span>
+              <span className={`text-xs font-bold ${selectedWorkspace.textColor}`}>{selectedWorkspace.icon}</span>
             </div>
             <span className="flex-1 text-sm font-medium text-sidebar-foreground truncate text-left">
               {selectedWorkspace.name}
@@ -100,22 +100,18 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                   }`}
                 >
                   <div className={`w-6 h-6 rounded ${workspace.color} flex items-center justify-center flex-shrink-0`}>
-                    <span className="text-xs font-bold text-white">{workspace.icon}</span>
+                    <span className={`text-xs font-bold ${workspace.textColor}`}>{workspace.icon}</span>
                   </div>
                   <span className="flex-1 text-sm text-sidebar-foreground truncate text-left">
                     {workspace.name}
                   </span>
                   {selectedWorkspace.id === workspace.id && (
-                    <Check className={`w-4 h-4 flex-shrink-0 ${
-                      workspace.id === 1 ? "text-blue-500" :
-                      workspace.id === 2 ? "text-purple-500" :
-                      "text-green-500"
-                    }`} />
+                    <Check className={`w-4 h-4 flex-shrink-0 ${workspace.textColor}`} />
                   )}
                 </button>
               ))}
               <div className="border-t border-sidebar-border px-3 py-2">
-                <button className="w-full text-left text-sm text-blue-500 hover:text-blue-400 transition-colors">
+                <button className="w-full text-left text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
                   + New Workspace
                 </button>
               </div>
