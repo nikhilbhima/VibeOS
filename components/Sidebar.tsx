@@ -51,17 +51,17 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
       <button
         onClick={onToggle}
         className={`flex items-center mb-6 hover:opacity-80 transition-opacity w-full ${
-          isCollapsed ? "justify-center px-3 py-3" : "gap-3"
+          isCollapsed ? "px-3 py-3 rounded-xl" : "gap-3"
         }`}
         title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
       >
         <div className={`flex-shrink-0 flex items-center justify-center ${
-          isCollapsed ? "w-5 h-5" : "w-10 h-10"
+          isCollapsed ? "w-5 h-5" : "w-12 h-12"
         }`}>
           <img
             src={!mounted || theme === 'dark' ? "/vibeos-logo-dark.svg" : "/vibeos-logo-light.svg"}
             alt="VibeOS Logo"
-            className={isCollapsed ? "w-5 h-5" : "w-10 h-10"}
+            className={isCollapsed ? "w-7 h-7" : "w-12 h-12"}
           />
         </div>
         <div className={`flex-1 min-w-0 overflow-hidden transition-all duration-300 ${
