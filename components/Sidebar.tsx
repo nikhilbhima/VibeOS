@@ -50,30 +50,26 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
       {/* Logo and Title - Click to toggle */}
       <button
         onClick={onToggle}
-        className={`flex items-center mb-6 hover:opacity-80 transition-opacity w-full ${
-          isCollapsed ? "justify-center" : "gap-3"
+        className={`flex items-center gap-3 mb-6 hover:opacity-80 transition-opacity ${
+          isCollapsed ? "justify-center" : ""
         }`}
         title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
       >
-        <div className={`flex-shrink-0 flex items-center justify-center ${
-          isCollapsed ? "" : "w-12 h-12"
-        }`}>
-          <img
-            src={!mounted || theme === 'dark' ? "/vibeos-logo-dark.svg" : "/vibeos-logo-light.svg"}
-            alt="VibeOS Logo"
-            className={isCollapsed ? "w-5 h-5" : "w-12 h-12"}
-          />
-        </div>
-        <div className={`flex-1 min-w-0 overflow-hidden transition-all duration-300 ${
-          isCollapsed ? "opacity-0 w-0" : "opacity-100"
-        }`}>
-          <h1 className="text-lg font-semibold text-sidebar-foreground text-left whitespace-nowrap">
-            VibeOS
-          </h1>
-          <p className="text-xs text-sidebar-foreground/70 leading-tight text-left whitespace-nowrap">
-            The ultimate vibe-coding system
-          </p>
-        </div>
+        <img
+          src={!mounted || theme === 'dark' ? "/vibeos-logo-dark.svg" : "/vibeos-logo-light.svg"}
+          alt="VibeOS Logo"
+          className="w-8 h-8 flex-shrink-0"
+        />
+        {!isCollapsed && (
+          <div className="flex-1 min-w-0">
+            <h1 className="text-lg font-semibold text-sidebar-foreground text-left whitespace-nowrap">
+              VibeOS
+            </h1>
+            <p className="text-xs text-sidebar-foreground/70 leading-tight text-left whitespace-nowrap">
+              The ultimate vibe-coding system
+            </p>
+          </div>
+        )}
       </button>
 
       {/* Workspace Switcher */}
