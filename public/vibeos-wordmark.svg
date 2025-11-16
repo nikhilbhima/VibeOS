@@ -1,27 +1,20 @@
-<svg width="220" height="70" viewBox="0 0 220 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="200" height="60" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="wordmarkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <radialGradient id="wordmarkAuraGradient" cx="50%" cy="50%">
+      <stop offset="0%" style="stop-color:#FF006E;stop-opacity:1" />
+      <stop offset="35%" style="stop-color:#8338EC;stop-opacity:0.8" />
+      <stop offset="70%" style="stop-color:#3A86FF;stop-opacity:0.5" />
+      <stop offset="100%" style="stop-color:#3A86FF;stop-opacity:0" />
+    </radialGradient>
+
+    <linearGradient id="wordmarkTextGradient" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" style="stop-color:#FF006E;stop-opacity:1" />
       <stop offset="50%" style="stop-color:#8338EC;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#3A86FF;stop-opacity:1" />
     </linearGradient>
 
-    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#FF006E;stop-opacity:0.8" />
-      <stop offset="100%" style="stop-color:#3A86FF;stop-opacity:1" />
-    </linearGradient>
-
-    <filter id="wordmarkGlow">
-      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-      <feMerge>
-        <feMergeNode in="coloredBlur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-
-    <filter id="textGlow">
-      <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+    <filter id="wordmarkAuraGlow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
       <feMerge>
         <feMergeNode in="coloredBlur"/>
         <feMergeNode in="SourceGraphic"/>
@@ -29,53 +22,15 @@
     </filter>
   </defs>
 
-  <!-- Logo Icon -->
-  <g transform="translate(8, 11)">
-    <!-- Background glow -->
-    <circle cx="24" cy="24" r="20" fill="url(#wordmarkGradient)" opacity="0.2"/>
+  <!-- Logo Circle -->
+  <circle cx="30" cy="30" r="24" fill="url(#wordmarkAuraGradient)" filter="url(#wordmarkAuraGlow)"/>
 
-    <!-- Shadow V -->
-    <path d="M14 11 L24 35 L34 11"
-          stroke="#8338EC"
-          stroke-width="4"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          fill="none"
-          opacity="0.3"
-          transform="translate(0.5, 0.5)"/>
-
-    <!-- Main V -->
-    <path d="M14 11 L24 35 L34 11"
-          stroke="url(#wordmarkGradient)"
-          stroke-width="3.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          fill="none"
-          filter="url(#wordmarkGlow)"/>
-
-    <!-- Grid lines -->
-    <line x1="10" y1="38" x2="20" y2="40" stroke="#FF006E" stroke-width="1" opacity="0.4"/>
-    <line x1="28" y1="40" x2="38" y2="38" stroke="#3A86FF" stroke-width="1" opacity="0.4"/>
-
-    <!-- Neon dot -->
-    <circle cx="24" cy="37" r="1.5" fill="url(#wordmarkGradient)" filter="url(#wordmarkGlow)"/>
-  </g>
-
-  <!-- VibeOS Text with retro style -->
-  <text x="65" y="45"
+  <!-- VibeOS Text -->
+  <text x="65" y="40"
         font-family="system-ui, -apple-system, 'Segoe UI', sans-serif"
-        font-size="32"
-        font-weight="800"
-        fill="url(#textGradient)"
-        filter="url(#textGlow)"
-        letter-spacing="1">
+        font-size="28"
+        font-weight="700"
+        fill="url(#wordmarkTextGradient)">
     VibeOS
   </text>
-
-  <!-- Underline accent -->
-  <line x1="65" y1="52" x2="200" y2="52"
-        stroke="url(#wordmarkGradient)"
-        stroke-width="1.5"
-        opacity="0.5"
-        stroke-dasharray="3 3"/>
 </svg>

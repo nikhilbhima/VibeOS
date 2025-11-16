@@ -1,60 +1,21 @@
 <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="faviconBg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#16213e;stop-opacity:1" />
-    </linearGradient>
-
-    <linearGradient id="faviconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <radialGradient id="faviconAuraGradient" cx="50%" cy="50%">
       <stop offset="0%" style="stop-color:#FF006E;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#8338EC;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#3A86FF;stop-opacity:1" />
-    </linearGradient>
+      <stop offset="35%" style="stop-color:#8338EC;stop-opacity:0.8" />
+      <stop offset="70%" style="stop-color:#3A86FF;stop-opacity:0.5" />
+      <stop offset="100%" style="stop-color:#3A86FF;stop-opacity:0" />
+    </radialGradient>
 
-    <filter id="faviconGlow">
-      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+    <filter id="faviconAuraGlow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
       <feMerge>
         <feMergeNode in="coloredBlur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
-
-    <radialGradient id="bgGlow" cx="50%" cy="50%">
-      <stop offset="0%" style="stop-color:#8338EC;stop-opacity:0.4" />
-      <stop offset="100%" style="stop-color:#1a1a2e;stop-opacity:0" />
-    </radialGradient>
   </defs>
 
-  <!-- Dark background -->
-  <rect width="64" height="64" fill="url(#faviconBg)" rx="12"/>
-
-  <!-- Glow effect -->
-  <circle cx="32" cy="32" r="25" fill="url(#bgGlow)"/>
-
-  <!-- Shadow V -->
-  <path d="M20 18 L32 46 L44 18"
-        stroke="#8338EC"
-        stroke-width="5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        fill="none"
-        opacity="0.3"
-        transform="translate(1, 1)"/>
-
-  <!-- Main V with neon gradient -->
-  <path d="M20 18 L32 46 L44 18"
-        stroke="url(#faviconGradient)"
-        stroke-width="4.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        fill="none"
-        filter="url(#faviconGlow)"/>
-
-  <!-- Grid lines accent -->
-  <line x1="16" y1="50" x2="24" y2="52" stroke="#FF006E" stroke-width="1.5" opacity="0.5"/>
-  <line x1="40" y1="52" x2="48" y2="50" stroke="#3A86FF" stroke-width="1.5" opacity="0.5"/>
-
-  <!-- Neon dot -->
-  <circle cx="32" cy="50" r="2.5" fill="url(#faviconGradient)" filter="url(#faviconGlow)"/>
-  <circle cx="32" cy="50" r="4" fill="url(#faviconGradient)" opacity="0.2"/>
+  <!-- Aura gradient circle -->
+  <circle cx="32" cy="32" r="28" fill="url(#faviconAuraGradient)" filter="url(#faviconAuraGlow)"/>
 </svg>
