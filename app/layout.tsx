@@ -18,6 +18,14 @@ export const metadata: Metadata = {
   title: "VibeOS - The Ultimate Vibe-Coding System",
   description: "Stop wasting credits on AI coding tools. Plan better, build faster with VibeOS.",
   manifest: "/manifest.json",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+  },
   themeColor: "#c9a574",
   viewport: {
     width: "device-width",

@@ -48,12 +48,17 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
         }`}
         title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
       >
-        <div className={`rounded-xl overflow-hidden bg-accent flex-shrink-0 flex items-center justify-center ${
+        <div className={`flex-shrink-0 flex items-center justify-center ${
           isCollapsed ? "w-10 h-10" : "w-12 h-12"
         }`}>
-          <span className={`font-bold text-accent-foreground ${
-            isCollapsed ? "text-lg" : "text-xl"
-          }`}>V</span>
+          <img
+            src="/vibeos-logo.svg"
+            alt="VibeOS Logo"
+            className={`text-sidebar-foreground ${
+              isCollapsed ? "w-10 h-10" : "w-12 h-12"
+            }`}
+            style={{ color: 'currentColor' }}
+          />
         </div>
         <div className={`flex-1 min-w-0 overflow-hidden transition-all duration-300 ${
           isCollapsed ? "opacity-0 w-0" : "opacity-100"
