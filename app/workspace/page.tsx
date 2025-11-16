@@ -1,8 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Search, Filter, Grid, List, Clock, CheckCircle2, Circle, AlertCircle, Users, Settings, MessageSquare } from "lucide-react";
+import { Plus, Search, Filter, Grid, List, Clock, CheckCircle2, Circle, AlertCircle, Users, Settings, MessageSquare, ChevronDown, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+// Mock workspaces
+const mockWorkspaces = [
+  { id: 1, name: "Personal Projects", icon: "P", color: "bg-blue-500/20 border border-blue-500/50", textColor: "text-blue-600 dark:text-blue-400" },
+  { id: 2, name: "Team Workspace", icon: "T", color: "bg-purple-500/20 border border-purple-500/50", textColor: "text-purple-600 dark:text-purple-400" },
+  { id: 3, name: "Client Work", icon: "C", color: "bg-green-500/20 border border-green-500/50", textColor: "text-green-600 dark:text-green-400" },
+];
 
 // Mock data for demonstration
 const mockProjects = [
@@ -86,6 +93,8 @@ export default function WorkspacePage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [searchQuery, setSearchQuery] = useState("");
   const [showTeamModal, setShowTeamModal] = useState(false);
+  const [selectedWorkspace, setSelectedWorkspace] = useState(mockWorkspaces[0]);
+  const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -135,6 +144,54 @@ export default function WorkspacePage() {
                 New Project
               </Button>
             </div>
+          </div>
+
+          {/* Workspace Switcher */}
+          <div className="relative mb-6">
+            <button
+              onClick={() => setShowWorkspaceDropdown(!showWorkspaceDropdown)}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border hover:bg-accent/30 transition-colors"
+            >
+              <span className="text-sm font-medium text-foreground">
+                {selectedWorkspace.name}
+              </span>
+              <ChevronDown className="w-4 h-4 text-foreground/70 flex-shrink-0" />
+            </button>
+
+            {/* Workspace Dropdown */}
+            {showWorkspaceDropdown && (
+              <div className="absolute top-full left-0 mt-2 w-64 bg-background border border-border rounded-xl shadow-lg z-50 overflow-hidden">
+                {mockWorkspaces.map((workspace) => (
+                  <button
+                    key={workspace.id}
+                    onClick={() => {
+                      setSelectedWorkspace(workspace);
+                      setShowWorkspaceDropdown(false);
+                    }}
+                    className={`w-full flex items-center gap-2 px-3 py-2.5 transition-colors ${
+                      selectedWorkspace.id === workspace.id
+                        ? "bg-accent text-accent-foreground"
+                        : "hover:bg-accent hover:text-accent-foreground"
+                    }`}
+                  >
+                    <div className={`w-6 h-6 rounded ${workspace.color} flex items-center justify-center flex-shrink-0`}>
+                      <span className={`text-xs font-bold ${workspace.textColor}`}>{workspace.icon}</span>
+                    </div>
+                    <span className="flex-1 text-sm truncate text-left">
+                      {workspace.name}
+                    </span>
+                    {selectedWorkspace.id === workspace.id && (
+                      <Check className={`w-4 h-4 flex-shrink-0 ${workspace.textColor}`} />
+                    )}
+                  </button>
+                ))}
+                <div className="border-t border-border px-3 py-2">
+                  <button className="w-full text-left text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
+                    + New Workspace
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Search and Filters */}

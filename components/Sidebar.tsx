@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
-import { Home, Folder, Layers, User, ChevronDown, Check } from "lucide-react";
+import { Home, Folder, Layers, User } from "lucide-react";
 import { useAccessGate } from "./AccessGate";
 
 interface SidebarProps {
@@ -11,20 +11,12 @@ interface SidebarProps {
   onToggle: () => void;
 }
 
-const mockWorkspaces = [
-  { id: 1, name: "Personal Projects", icon: "P", color: "bg-blue-500/20 border border-blue-500/50", textColor: "text-blue-600 dark:text-blue-400" },
-  { id: 2, name: "Team Workspace", icon: "T", color: "bg-purple-500/20 border border-purple-500/50", textColor: "text-purple-600 dark:text-purple-400" },
-  { id: 3, name: "Client Work", icon: "C", color: "bg-green-500/20 border border-green-500/50", textColor: "text-green-600 dark:text-green-400" },
-];
-
 export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { theme } = useTheme();
   const { hasAccess, requestAccess } = useAccessGate();
   const [mounted, setMounted] = useState(false);
-  const [selectedWorkspace, setSelectedWorkspace] = useState(mockWorkspaces[0]);
-  const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -81,56 +73,6 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
           </div>
         )}
       </button>
-
-      {/* Workspace Switcher */}
-      {!isCollapsed && (
-        <div className="relative mb-4">
-          <button
-            onClick={() => setShowWorkspaceDropdown(!showWorkspaceDropdown)}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-sidebar-border hover:bg-sidebar-accent/30 transition-colors"
-          >
-            <span className="flex-1 text-sm font-medium text-sidebar-foreground truncate text-left">
-              {selectedWorkspace.name}
-            </span>
-            <ChevronDown className="w-4 h-4 text-sidebar-foreground/70 flex-shrink-0" />
-          </button>
-
-          {/* Workspace Dropdown */}
-          {showWorkspaceDropdown && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-xl shadow-lg z-50 overflow-hidden">
-              {mockWorkspaces.map((workspace) => (
-                <button
-                  key={workspace.id}
-                  onClick={() => {
-                    setSelectedWorkspace(workspace);
-                    setShowWorkspaceDropdown(false);
-                  }}
-                  className={`w-full flex items-center gap-2 px-3 py-2.5 transition-colors ${
-                    selectedWorkspace.id === workspace.id
-                      ? "bg-accent text-accent-foreground"
-                      : "hover:bg-accent hover:text-accent-foreground"
-                  }`}
-                >
-                  <div className={`w-6 h-6 rounded ${workspace.color} flex items-center justify-center flex-shrink-0`}>
-                    <span className={`text-xs font-bold ${workspace.textColor}`}>{workspace.icon}</span>
-                  </div>
-                  <span className="flex-1 text-sm truncate text-left">
-                    {workspace.name}
-                  </span>
-                  {selectedWorkspace.id === workspace.id && (
-                    <Check className={`w-4 h-4 flex-shrink-0 ${workspace.textColor}`} />
-                  )}
-                </button>
-              ))}
-              <div className="border-t border-border px-3 py-2">
-                <button className="w-full text-left text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
-                  + New Workspace
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
 
       {/* Navigation */}
       <nav className="flex-1 space-y-2">
