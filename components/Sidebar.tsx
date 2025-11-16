@@ -43,13 +43,17 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
       {/* Logo and Title - Click to toggle */}
       <button
         onClick={onToggle}
-        className={`flex items-center gap-3 mb-6 hover:opacity-80 transition-opacity w-full ${
-          isCollapsed ? "justify-center" : ""
+        className={`flex items-center mb-6 hover:opacity-80 transition-opacity w-full ${
+          isCollapsed ? "justify-center" : "gap-3"
         }`}
         title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
       >
-        <div className="w-12 h-12 rounded-xl overflow-hidden bg-accent flex-shrink-0 flex items-center justify-center">
-          <span className="text-xl font-bold text-accent-foreground">V</span>
+        <div className={`rounded-xl overflow-hidden bg-accent flex-shrink-0 flex items-center justify-center ${
+          isCollapsed ? "w-10 h-10" : "w-12 h-12"
+        }`}>
+          <span className={`font-bold text-accent-foreground ${
+            isCollapsed ? "text-lg" : "text-xl"
+          }`}>V</span>
         </div>
         <div className={`flex-1 min-w-0 overflow-hidden transition-all duration-300 ${
           isCollapsed ? "opacity-0 w-0" : "opacity-100"
