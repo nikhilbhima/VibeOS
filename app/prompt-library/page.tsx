@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Filter, Star, Download, Eye, TrendingUp, Clock, Sparkles, Code, FileText, Zap, Crown } from "lucide-react";
+import { Search, Star, Download, Eye, TrendingUp, Sparkles, FileText, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // Mock prompts data

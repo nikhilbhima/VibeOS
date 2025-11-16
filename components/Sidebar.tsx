@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Home, Folder, Layers, User, ChevronLeft, ChevronDown, Check } from "lucide-react";
+import { Home, Folder, Layers, User, ChevronDown, Check } from "lucide-react";
 
 interface SidebarProps {
   isCollapsed: boolean;

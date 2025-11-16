@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Paperclip, Send, Sparkles, SlidersHorizontal, ChevronDown, SquarePen } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Paperclip, SlidersHorizontal, ChevronDown, SquarePen } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
@@ -49,7 +48,6 @@ export function ChatCard({
   onNewChat,
   hasMessages = false,
 }: ChatCardProps) {
-  const { theme } = useTheme();
   const [vibeModel, setVibeModel] = useState("VibeOS Pro");
   const [showConnectModal, setShowConnectModal] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState("");

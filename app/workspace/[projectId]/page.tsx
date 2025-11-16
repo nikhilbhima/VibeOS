@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, RotateCcw, Download, Share2, MoreVertical, CheckCircle2, Circle, PlayCircle, Calendar, MessageSquare, FileText, Settings, Send, Link2, Mail, Copy, Users } from "lucide-react";
+import { ArrowLeft, RotateCcw, Download, Share2, MoreVertical, CheckCircle2, Circle, PlayCircle, Calendar, MessageSquare, FileText, Send, Mail, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
@@ -110,7 +110,7 @@ const mockComments = [
   },
 ];
 
-export default function ProjectDetailPage({ params }: { params: { projectId: string } }) {
+export default function ProjectDetailPage() {
   const router = useRouter();
   const [selectedPhaseId, setSelectedPhaseId] = useState(mockProject.currentPhaseId);
   const [showShareModal, setShowShareModal] = useState(false);
@@ -223,7 +223,7 @@ export default function ProjectDetailPage({ params }: { params: { projectId: str
           <div className="lg:col-span-1">
             <h2 className="text-lg font-semibold mb-4">Phases</h2>
             <div className="space-y-3">
-              {mockProject.phases.map((phase, index) => (
+              {mockProject.phases.map((phase) => (
                 <button
                   key={phase.id}
                   onClick={() => setSelectedPhaseId(phase.id)}

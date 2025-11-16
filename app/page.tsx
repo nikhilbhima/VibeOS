@@ -16,8 +16,10 @@ export default function Home() {
   const [messages, setMessages] = useState<Array<{ role: string; content: string }>>([]);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
 
+  // Fix: Properly handle client-side mounting
   useEffect(() => {
-    setMounted(true);
+    const timer = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleSend = () => {
