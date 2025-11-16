@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import { Home, Folder, Layers, User, ChevronDown, Check } from "lucide-react";
 
 interface SidebarProps {
@@ -18,6 +19,7 @@ const mockWorkspaces = [
 export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const { theme } = useTheme();
   const [selectedWorkspace, setSelectedWorkspace] = useState(mockWorkspaces[0]);
   const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
 
@@ -52,12 +54,9 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
           isCollapsed ? "w-10 h-10" : "w-12 h-12"
         }`}>
           <img
-            src="/vibeos-logo.svg"
+            src={theme === 'dark' ? "/vibeos-logo-dark.svg" : "/vibeos-logo-light.svg"}
             alt="VibeOS Logo"
-            className={`text-sidebar-foreground ${
-              isCollapsed ? "w-10 h-10" : "w-12 h-12"
-            }`}
-            style={{ color: 'currentColor' }}
+            className={isCollapsed ? "w-10 h-10" : "w-12 h-12"}
           />
         </div>
         <div className={`flex-1 min-w-0 overflow-hidden transition-all duration-300 ${
