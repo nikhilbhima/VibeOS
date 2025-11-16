@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { PWAInstall } from "@/components/PWAInstall";
+import { AccessGate } from "@/components/AccessGate";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -56,8 +57,10 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <PWAInstall />
-          {children}
+          <AccessGate>
+            <PWAInstall />
+            {children}
+          </AccessGate>
         </ThemeProvider>
       </body>
     </html>
