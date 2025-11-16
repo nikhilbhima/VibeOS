@@ -137,12 +137,12 @@ export function AccessGate({ children }: { children: React.ReactNode }) {
                 <p className="text-muted-foreground text-xs">
                   Want early access?{" "}
                   <a
-                    href="https://twitter.com/yourhandle"
+                    href="https://x.com/nikhilbhima"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-primary hover:underline"
                   >
-                    Follow us on Twitter
+                    DM me on 𝕏
                   </a>
                 </p>
               </div>
