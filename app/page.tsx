@@ -126,8 +126,8 @@ export default function Home() {
           // BEFORE first message - Centered layout
           <div className="flex-1 flex flex-col items-center justify-center px-3 sm:px-4 md:px-8 pb-4">
             {/* Heading */}
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-center mb-6 sm:mb-8 text-foreground">
-              What are you building today?
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-center mb-6 sm:mb-8 bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-600 bg-clip-text text-transparent">
+              VibeOS
             </h1>
 
             {/* Quick Actions */}

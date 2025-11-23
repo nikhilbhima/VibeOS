@@ -1,9 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
-import { Home, Folder, Layers, User } from "lucide-react";
+import { Home, Folder, User, Plus, PanelLeft } from "lucide-react";
 import { useAccessGate } from "./AccessGate";
 
 interface SidebarProps {
@@ -14,13 +12,7 @@ interface SidebarProps {
 export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const { theme } = useTheme();
   const { hasAccess, requestAccess } = useAccessGate();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const isActive = (path: string) => pathname === path || pathname?.startsWith(path + "/");
 
@@ -43,98 +35,113 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
       )}
 
       <aside
-        className={`fixed left-0 top-0 h-screen bg-sidebar border-r border-sidebar-border flex flex-col p-4 transition-all duration-300 z-50 ${
+        className={`fixed left-0 top-0 h-screen bg-sidebar border-r border-sidebar-border flex flex-col z-50 ${
           isCollapsed
-            ? "w-[80px] -translate-x-full md:translate-x-0"
-            : "w-[280px] translate-x-0"
+            ? "w-[68px] -translate-x-full md:translate-x-0 overflow-visible"
+            : "w-[280px] translate-x-0 overflow-hidden"
         }`}
       >
-      {/* Logo and Title - Click to toggle */}
-      <button
-        onClick={onToggle}
-        className={`flex items-center gap-3 mb-6 hover:opacity-80 transition-opacity ${
-          isCollapsed ? "justify-center" : ""
-        }`}
-        title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-      >
-        <img
-          src={!mounted || theme === 'dark' ? "/vibeos-logo-dark.svg" : "/vibeos-logo-light.svg"}
-          alt="VibeOS Logo"
-          className="w-8 h-8 flex-shrink-0"
-        />
-        {!isCollapsed && (
-          <div className="flex-1 min-w-0">
-            <h1 className="text-lg font-semibold text-sidebar-foreground text-left whitespace-nowrap">
-              VibeOS
-            </h1>
-            <p className="text-xs text-sidebar-foreground/70 leading-tight text-left whitespace-nowrap">
-              The ultimate vibe-coding system
-            </p>
+        <div className="flex flex-col h-full">
+          {/* Logo - Click to toggle */}
+          <div className="h-[60px] flex items-center px-[18px] mb-4">
+            <button
+              onClick={onToggle}
+              className="w-full flex items-center gap-3 text-sidebar-foreground group relative"
+            >
+              <div className="w-[32px] h-[32px] rounded-md flex items-center justify-center flex-shrink-0 hover:bg-sidebar-accent/10 relative">
+                <PanelLeft className="w-[18px] h-[18px]" />
+                {isCollapsed && (
+                  <span className="absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded-md opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 shadow-lg">
+                    Toggle Sidebar
+                  </span>
+                )}
+              </div>
+              {!isCollapsed && (
+                <h1 className="text-base font-semibold text-sidebar-foreground whitespace-nowrap">
+                  VibeOS
+                </h1>
+              )}
+            </button>
           </div>
-        )}
-      </button>
 
-      {/* Navigation */}
-      <nav className="flex-1 space-y-2">
-        {/* Home */}
-        <button
-          onClick={() => handleNavigation("/")}
-          className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-colors ${
-            isActive("/") && !isActive("/workspace")
-              ? "bg-sidebar-accent text-sidebar-accent-foreground"
-              : "text-sidebar-foreground hover:bg-sidebar-accent/50"
-          } ${isCollapsed ? "justify-center" : ""}`}
-          title="Home"
-        >
-          <Home className="w-5 h-5 flex-shrink-0" />
-          {!isCollapsed && <span className="font-medium">Home</span>}
-        </button>
+          {/* Navigation */}
+          <nav className="flex-1 px-[18px] space-y-2">
+            {/* New Chat */}
+            <button
+              onClick={() => handleNavigation("/")}
+              className="w-full flex items-center gap-3 h-[44px] text-sidebar-foreground group relative"
+            >
+              <div className="w-[32px] h-[32px] rounded-full border-2 border-sidebar-foreground/20 flex items-center justify-center group-hover:scale-110 flex-shrink-0 bg-sidebar-accent/5 relative">
+                <Plus className="w-[18px] h-[18px]" />
+                {isCollapsed && (
+                  <span className="absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded-md opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 shadow-lg">
+                    New Chat
+                  </span>
+                )}
+              </div>
+              {!isCollapsed && <span className="whitespace-nowrap">New Chat</span>}
+            </button>
 
-        {/* Workspace */}
-        <button
-          onClick={() => handleNavigation("/workspace")}
-          className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-colors ${
-            isActive("/workspace")
-              ? "bg-sidebar-accent text-sidebar-accent-foreground"
-              : "text-sidebar-foreground hover:bg-sidebar-accent/50"
-          } ${isCollapsed ? "justify-center" : ""}`}
-          title="Workspace"
-        >
-          <Folder className="w-5 h-5 flex-shrink-0" />
-          {!isCollapsed && <span className="font-medium">Workspace</span>}
-        </button>
+            {/* Home */}
+            <button
+              onClick={() => handleNavigation("/")}
+              className={`w-full flex items-center gap-3 h-[32px] text-sidebar-foreground group relative rounded-md ${
+                isActive("/") && !isActive("/workspace")
+                  ? "bg-sidebar-accent/20"
+                  : "hover:bg-sidebar-accent/10"
+              }`}
+            >
+              <div className="w-[32px] h-[32px] flex items-center justify-center flex-shrink-0 relative">
+                <Home className="w-[18px] h-[18px]" />
+                {isCollapsed && (
+                  <span className="absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded-md opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 shadow-lg">
+                    Home
+                  </span>
+                )}
+              </div>
+              {!isCollapsed && <span className="whitespace-nowrap">Home</span>}
+            </button>
 
-        {/* Prompt Library */}
-        <button
-          onClick={() => handleNavigation("/prompt-library")}
-          className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-colors ${
-            isActive("/prompt-library")
-              ? "bg-sidebar-accent text-sidebar-accent-foreground"
-              : "text-sidebar-foreground hover:bg-sidebar-accent/50"
-          } ${isCollapsed ? "justify-center" : ""}`}
-          title="Prompt Library"
-        >
-          <Layers className="w-5 h-5 flex-shrink-0" />
-          {!isCollapsed && <span className="font-medium">Prompt Library</span>}
-        </button>
-      </nav>
+            {/* Workspace */}
+            <button
+              onClick={() => handleNavigation("/workspace")}
+              className={`w-full flex items-center gap-3 h-[32px] text-sidebar-foreground group relative rounded-md ${
+                isActive("/workspace")
+                  ? "bg-sidebar-accent/20"
+                  : "hover:bg-sidebar-accent/10"
+              }`}
+            >
+              <div className="w-[32px] h-[32px] flex items-center justify-center flex-shrink-0 relative">
+                <Folder className="w-[18px] h-[18px]" />
+                {isCollapsed && (
+                  <span className="absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded-md opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 shadow-lg">
+                    Workspace
+                  </span>
+                )}
+              </div>
+              {!isCollapsed && <span className="whitespace-nowrap">Workspace</span>}
+            </button>
+          </nav>
 
-      {/* User */}
-      <button
-        onClick={() => {
-          if (!hasAccess) {
-            requestAccess();
-          }
-        }}
-        className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors ${
-          isCollapsed ? "justify-center" : ""
-        }`}
-        title="User"
-      >
-        <User className="w-5 h-5 flex-shrink-0" />
-        {!isCollapsed && <span className="font-medium">User</span>}
-      </button>
-    </aside>
+          {/* User at bottom */}
+          <div className="px-[18px] pb-4">
+            <button
+              onClick={() => {
+                if (!hasAccess) {
+                  requestAccess();
+                }
+              }}
+              className="w-full flex items-center gap-3 h-[44px] text-sidebar-foreground"
+              title="User"
+            >
+              <div className="w-[32px] h-[32px] rounded-md flex items-center justify-center flex-shrink-0 hover:bg-sidebar-accent/10">
+                <User className="w-[18px] h-[18px]" />
+              </div>
+              {!isCollapsed && <span className="whitespace-nowrap">User</span>}
+            </button>
+          </div>
+        </div>
+      </aside>
     </>
   );
 }

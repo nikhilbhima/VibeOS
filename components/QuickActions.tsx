@@ -1,6 +1,6 @@
 "use client";
 
-import { Sparkles, FileText, TrendingUp, Bug, Code, FileBox } from "lucide-react";
+import { Sparkles, FileText, Palette, TrendingUp, Bug, Code, FileBox } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface QuickActionsProps {
@@ -12,6 +12,7 @@ interface QuickActionsProps {
 const actions = [
   { id: "Brainstorm", label: "Brainstorm", icon: Sparkles },
   { id: "Specs", label: "Specs", icon: FileText },
+  { id: "Design", label: "Design", icon: Palette },
   { id: "Phases", label: "Phases", icon: TrendingUp },
   { id: "Bug Checks", label: "Bug Checks", icon: Bug },
   { id: "Prompts", label: "Prompts", icon: Code },
