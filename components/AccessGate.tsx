@@ -37,7 +37,13 @@ export function useAccessGate() {
 }
 
 export function AccessGate({ children }: { children: React.ReactNode }) {
-  const [hasAccess, setHasAccess] = useState(false);
+  // Initialize with stored access if available (client-only)
+  const [hasAccess, setHasAccess] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem(STORAGE_KEY) === "true";
+    }
+    return false;
+  });
   const [showModal, setShowModal] = useState(false);
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
@@ -47,13 +53,9 @@ export function AccessGate({ children }: { children: React.ReactNode }) {
   const accessRequired = process.env.NEXT_PUBLIC_ACCESS_REQUIRED !== "false";
 
   useEffect(() => {
-    setMounted(true);
-
-    // Check if user already has access
-    if (typeof window !== "undefined") {
-      const hasStoredAccess = localStorage.getItem(STORAGE_KEY) === "true";
-      setHasAccess(hasStoredAccess);
-    }
+    // Mark as mounted after a frame to ensure hydration
+    const timer = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
