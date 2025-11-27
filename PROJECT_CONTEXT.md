@@ -1,6 +1,6 @@
 # VibeOS - Project Context & Status
 
-**Last Updated**: 2025-01-16
+**Last Updated**: 2025-01-23
 **Current Stage**: Frontend UI Only (No Backend)
 **Deployed**: ✅ Vercel Production
 **Status**: 0 Bugs, Production Ready
@@ -9,7 +9,11 @@
 
 ## 🎯 Project Overview
 
-**VibeOS** is a vibe-coding system designed to help users build projects using AI-powered tools like Lovable, Bolt, V0, etc. Currently **frontend-only** with no backend implementation.
+**VibeOS** is a **planning and workspace management tool** designed to help users organize their software projects through different phases (Brainstorm → Specs → Design → Development → Testing → Deployment → Blueprint).
+
+**IMPORTANT:** VibeOS is **NOT a code generation or review tool**. It's purely focused on planning, organizing, and documenting software projects. Users plan in VibeOS, then execute in other tools (Lovable, Bolt, V0, etc.).
+
+Currently **frontend-only** with no backend implementation.
 
 ### Tech Stack
 - **Framework**: Next.js 16.0.3 (App Router, Turbopack)
@@ -123,6 +127,10 @@ VibeOS/
 - ✅ Mock data for demonstration
 - ✅ Client-side routing
 - ✅ State management (React hooks)
+- ✅ Project phases system (Brainstorm, Specs, Design, Development, Testing, Deployment, Blueprint)
+- ✅ Context-aware chat interface (phase-specific)
+- ✅ Blueprint documentation view
+- ✅ Progress tracking visualization
 
 ### What's NOT Implemented (No Backend)
 - ❌ Real authentication
@@ -133,6 +141,8 @@ VibeOS/
 - ❌ Project CRUD operations
 - ❌ Real-time collaboration
 - ❌ File uploads
+- ❌ Code generation/review (intentionally NOT a feature)
+- ❌ Third-party integrations (Notion, Slack, Linear, etc.)
 
 ### Mock Data Locations
 - **Projects**: [app/workspace/page.tsx](app/workspace/page.tsx) - `mockProjects`
@@ -224,14 +234,21 @@ vercel ls
 ## 💡 Tips for Next Claude Code Session
 
 ### Quick Context Brief
-> "This is VibeOS - a frontend-only vibe-coding app with selective access gate (code: 360). Workspace dropdown is on /workspace page, not sidebar. No backend yet - all mock data. Deployed on Vercel, 0 bugs."
+> "This is VibeOS - a **planning and workspace tool** (NOT code generation). Frontend-only with selective access gate (code: 360). Workspace dropdown is on /workspace page. Phase-based project organization (Brainstorm → Blueprint). No backend yet - all mock data. Deployed on Vercel, 0 bugs."
+
+### Core Identity & Positioning
+- **VibeOS is a PLANNING TOOL** - Not for code generation or review
+- **Users plan here, execute elsewhere** - VibeOS connects to execution tools (Lovable, Bolt, V0)
+- **Integration priority: Notion first** - Documentation and blueprint export
+- **Don't integrate with competing planning tools** - Only connect to execution, communication, and task management tools
 
 ### Common Tasks
-1. **Adding new features**: Remember it's frontend-only, use mock data
+1. **Adding new features**: Remember it's frontend-only, use mock data, focus on planning features
 2. **Styling changes**: Uses Tailwind CSS 4, check responsive classes
 3. **Access gate**: Don't remove unless explicitly asked
 4. **Logo changes**: Use pure vector SVGs, no embedded PNGs
 5. **Deployment**: Always run `npm run build` before deploying
+6. **Integration discussions**: Focus on Notion, Linear, Slack - NOT code generation tools
 
 ### Important Conventions
 - **No emojis** in code unless user asks
@@ -239,6 +256,8 @@ vercel ls
 - **Access gate**: Keep selective - not a blanket overlay
 - **Git commits**: Detailed messages with co-author attribution
 - **TypeScript**: Full type safety, no `any` types
+- **Planning > Code**: Never suggest code generation/review features
+- **User prefers concise responses**: Short, direct answers only
 
 ---
 
@@ -250,19 +269,45 @@ vercel ls
 - Create API routes
 - User management system
 
-### Phase 2: Core Features
+### Phase 2: Core Planning Features
 - Project CRUD operations
 - Workspace management
-- AI tool integrations (Lovable, Bolt, V0)
+- Real AI chat integration (context-aware planning assistance)
 - Prompt library functionality
+- Blueprint export/import
 
-### Phase 3: Collaboration
+### Phase 3: Integrations Strategy
+**Focus: VibeOS as the Planning Hub**
+
+**Phase 3A - Documentation (Priority #1):**
+- **Notion Integration** (OAuth2, read/write access)
+  - Export blueprints to Notion
+  - Import existing documentation from Notion
+  - Sync project phases with Notion pages
+  - Free API, well-documented, easy implementation
+
+**Phase 3B - Task Management:**
+- **Linear Integration** - Create tasks from project phases
+- **Jira Integration** - Enterprise task management
+- **Height Integration** - Modern alternative to Linear
+
+**Phase 3C - Communication:**
+- **Slack Integration** - Phase completion notifications
+- **Discord Integration** - Community-focused projects
+
+**Phase 3D - Design Handoff:**
+- **Figma Integration** (read-only) - Import design specs for reference
+- Not for generating designs, just referencing existing ones
+
+**Strategy:** Position VibeOS as the central planning hub that connects to execution and communication tools. Do NOT integrate with competing planning tools (Gamma AI, Taskade, ClickUp AI). Users plan in VibeOS, execute in other tools.
+
+### Phase 4: Collaboration
 - Team workspaces
 - Real-time updates
 - Comment system
 - Activity tracking
 
-### Phase 4: Advanced Features
+### Phase 5: Advanced Features
 - File uploads
 - Version control integration
 - Deployment automation
@@ -281,16 +326,38 @@ vercel ls
 
 ## ⚠️ Important Reminders
 
-1. **NO BACKEND** - Everything is frontend with mock data
-2. **Access gate is intentional** - Private beta for social media showcase
-3. **SVG logos must be pure vector** - No embedded PNGs
-4. **Mobile responsive** - Always test on different screen sizes
-5. **Git commits** - Always include detailed messages
-6. **Deployment** - Test build locally before Vercel deploy
-7. **Context doesn't persist** - Each new chat needs this brief
+1. **PLANNING TOOL, NOT CODE GENERATION** - VibeOS helps users plan projects, not generate/review code
+2. **NO BACKEND** - Everything is frontend with mock data
+3. **Access gate is intentional** - Private beta for social media showcase (code: 360)
+4. **SVG logos must be pure vector** - No embedded PNGs
+5. **Mobile responsive** - Always test on different screen sizes
+6. **Git commits** - Always include detailed messages
+7. **Deployment** - Test build locally before Vercel deploy
+8. **Integration strategy** - Notion first, then Linear/Slack, never competing planning tools
+9. **User preference** - Concise responses, no unnecessary features
+10. **Phase-based organization** - Projects go through: Brainstorm → Specs → Design → Development → Testing → Deployment → Blueprint
+
+---
+
+## 📊 Project Phases Explained
+
+1. **Brainstorm** - Initial ideation, feature planning, problem definition
+2. **Specs** - Technical requirements, API structure, database schema
+3. **Design** - Wireframes, UI mockups, design systems
+4. **Development** - Building features (executed in other tools like Lovable, Bolt, V0)
+5. **Testing** - QA, bug checks, validation
+6. **Deployment** - Production release, hosting setup
+7. **Blueprint** - Complete project documentation with context, outcome, tech stack
+
+Each phase has:
+- Status: `pending`, `in-progress`, or `completed`
+- Brief description
+- Context for AI assistance
+- Phase-specific chat interface
 
 ---
 
 **Last Build**: ✅ Success (2.3s)
 **Last Deploy**: ✅ Vercel Production
 **Last Commit**: "Move workspace dropdown from Sidebar to Workspace page"
+**Context Updated**: 2025-01-23 (Added planning tool identity & integration strategy)
