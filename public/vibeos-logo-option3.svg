@@ -1,0 +1,33 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="goldGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8d5b7"/>
+      <stop offset="50%" style="stop-color:#c9a574"/>
+      <stop offset="100%" style="stop-color:#8b7355"/>
+    </linearGradient>
+
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Circular dark background -->
+  <circle cx="256" cy="256" r="248" fill="#0c0b0a"/>
+  <circle cx="256" cy="256" r="244" fill="none" stroke="#c9a574" stroke-width="1.5" opacity="0.2"/>
+
+  <!-- Modern abstract V - two lines meeting at a point -->
+  <g filter="url(#softGlow)">
+    <!-- Left arm -->
+    <line x1="120" y1="150" x2="256" y2="362" stroke="url(#goldGrad3)" stroke-width="36" stroke-linecap="round"/>
+    <!-- Right arm -->
+    <line x1="392" y1="150" x2="256" y2="362" stroke="url(#goldGrad3)" stroke-width="36" stroke-linecap="round"/>
+  </g>
+
+  <!-- Pulse ring effect at the vertex -->
+  <circle cx="256" cy="362" r="24" fill="none" stroke="#c9a574" stroke-width="2" opacity="0.4"/>
+  <circle cx="256" cy="362" r="40" fill="none" stroke="#c9a574" stroke-width="1.5" opacity="0.2"/>
+</svg>

@@ -1,0 +1,33 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="goldH" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8d5b7"/>
+      <stop offset="100%" style="stop-color:#8b7355"/>
+    </linearGradient>
+    <filter id="glowH">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <circle cx="256" cy="256" r="248" fill="#0c0b0a"/>
+  <circle cx="256" cy="256" r="244" stroke="url(#goldH)" stroke-width="1" fill="none" opacity="0.1"/>
+
+  <!-- Abstract sphere with latitude lines - like a globe/OS -->
+  <g filter="url(#glowH)" stroke="url(#goldH)" fill="none">
+    <!-- Main circle outline -->
+    <circle cx="256" cy="256" r="140" stroke-width="10"/>
+
+    <!-- Horizontal latitude lines -->
+    <ellipse cx="256" cy="180" rx="130" ry="30" stroke-width="4" opacity="0.4"/>
+    <ellipse cx="256" cy="256" rx="140" ry="45" stroke-width="6" opacity="0.6"/>
+    <ellipse cx="256" cy="332" rx="130" ry="30" stroke-width="4" opacity="0.4"/>
+
+    <!-- Vertical meridian -->
+    <ellipse cx="256" cy="256" rx="50" ry="140" stroke-width="4" opacity="0.5"/>
+  </g>
+</svg>

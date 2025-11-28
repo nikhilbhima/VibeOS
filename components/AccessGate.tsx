@@ -93,7 +93,7 @@ export function AccessGate({ children }: { children: React.ReactNode }) {
 
       {/* Access Code Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[100] flex items-center justify-center p-4">
           <div className="bg-background border border-border rounded-2xl shadow-2xl max-w-md w-full p-8 animate-in fade-in zoom-in duration-200">
             <div className="flex flex-col items-center text-center space-y-6">
               {/* Lock Icon */}

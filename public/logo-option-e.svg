@@ -1,0 +1,38 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="goldE" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8d5b7"/>
+      <stop offset="50%" style="stop-color:#c9a574"/>
+      <stop offset="100%" style="stop-color:#8b7355"/>
+    </linearGradient>
+    <linearGradient id="goldE2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8d5b7"/>
+      <stop offset="100%" style="stop-color:#8b7355"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <circle cx="256" cy="256" r="248" fill="#0c0b0a"/>
+
+  <!-- Abstract portal/gateway - two arcs forming an opening -->
+  <path
+    d="M 180 380 Q 80 256, 180 132"
+    stroke="url(#goldE)"
+    stroke-width="40"
+    stroke-linecap="round"
+    fill="none"
+  />
+  <path
+    d="M 332 132 Q 432 256, 332 380"
+    stroke="url(#goldE2)"
+    stroke-width="40"
+    stroke-linecap="round"
+    fill="none"
+  />
+
+  <!-- Center orb -->
+  <circle cx="256" cy="256" r="36" fill="url(#goldE)"/>
+
+  <!-- Inner glow ring -->
+  <circle cx="256" cy="256" r="60" fill="none" stroke="url(#goldE)" stroke-width="3" opacity="0.4"/>
+</svg>

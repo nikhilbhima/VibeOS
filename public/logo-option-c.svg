@@ -1,0 +1,29 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="goldC" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8d5b7"/>
+      <stop offset="50%" style="stop-color:#c9a574"/>
+      <stop offset="100%" style="stop-color:#8b7355"/>
+    </linearGradient>
+    <filter id="glowC">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Circle background -->
+  <circle cx="256" cy="256" r="248" fill="#0c0b0a"/>
+  <circle cx="256" cy="256" r="244" fill="none" stroke="url(#goldC)" stroke-width="1.5" opacity="0.15"/>
+
+  <!-- Abstract waveform/signal - represents "vibe" -->
+  <g filter="url(#glowC)" stroke="url(#goldC)" stroke-width="28" stroke-linecap="round" fill="none">
+    <path d="M 100 256 Q 160 160, 220 256 T 340 256 T 460 256"/>
+  </g>
+
+  <!-- Dot accents -->
+  <circle cx="100" cy="256" r="18" fill="url(#goldC)"/>
+  <circle cx="460" cy="256" r="18" fill="url(#goldC)"/>
+</svg>
