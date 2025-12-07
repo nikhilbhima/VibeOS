@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
+// import { useParams } from "next/navigation"; // TODO: Enable when fetching real data
 import { ArrowLeft, Download, FileText, Check, Circle, Loader2, ArrowUp, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -67,8 +67,8 @@ const mockProject = {
 };
 
 export default function ProjectDetailPage() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const params = useParams();
+  // TODO: Use params.id to fetch real project data
+  // const { id } = useParams();
   const [selectedPhase, setSelectedPhase] = useState(mockProject.phases[3]);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Array<{ role: string; content: string }>>([]);
@@ -173,7 +173,7 @@ export default function ProjectDetailPage() {
                   Working on: {selectedPhase.name}
                 </h2>
                 <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
-                  I have full context of your project. Ask me anything about this phase and I'll help you plan effectively.
+                  I have full context of your project. Ask me anything about this phase and I&apos;ll help you plan effectively.
                 </p>
               </div>
             ) : (

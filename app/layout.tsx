@@ -25,6 +25,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://vibeos.app"),
   title: "VibeOS - The Ultimate Vibe-Coding System",
   description: "Stop wasting credits on AI coding tools. Plan better, build faster with VibeOS.",
   manifest: "/manifest.json",
@@ -33,13 +34,24 @@ export const metadata: Metadata = {
       { url: "/favicon.svg", type: "image/svg+xml" },
     ],
     apple: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/apple-touch-icon.svg", type: "image/svg+xml", sizes: "180x180" },
     ],
   },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "VibeOS",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "VibeOS",
+    title: "VibeOS - The Ultimate Vibe-Coding System",
+    description: "Stop wasting credits on AI coding tools. Plan better, build faster with VibeOS.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "VibeOS - The Ultimate Vibe-Coding System",
+    description: "Stop wasting credits on AI coding tools. Plan better, build faster with VibeOS.",
   },
 };
 

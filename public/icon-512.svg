@@ -1,0 +1,17 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="goldGrad512" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8d5b7"/>
+      <stop offset="50%" style="stop-color:#c9a574"/>
+      <stop offset="100%" style="stop-color:#8b7355"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Dark rounded square background -->
+  <rect width="512" height="512" rx="112" fill="#0c0b0a"/>
+
+  <!-- Stacked chevrons -->
+  <path d="M 128 160 L 256 304 L 384 160" stroke="url(#goldGrad512)" stroke-width="40" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.4"/>
+  <path d="M 144 208 L 256 336 L 368 208" stroke="url(#goldGrad512)" stroke-width="40" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.7"/>
+  <path d="M 160 256 L 256 368 L 352 256" stroke="url(#goldGrad512)" stroke-width="40" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
