@@ -47,11 +47,20 @@ export const metadata: Metadata = {
     siteName: "VibeOS",
     title: "VibeOS - The Ultimate Vibe-Coding System",
     description: "Stop wasting credits on AI coding tools. Plan better, build faster with VibeOS.",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "VibeOS - The Ultimate Vibe-Coding System",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "VibeOS - The Ultimate Vibe-Coding System",
     description: "Stop wasting credits on AI coding tools. Plan better, build faster with VibeOS.",
+    images: ["/opengraph-image"],
   },
 };
 
