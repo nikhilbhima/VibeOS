@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VibeOS
+
+**Plan better. Build faster.** The intelligent workspace for vibe-coding.
+
+VibeOS is a planning and workspace management tool designed to help developers organize software projects through structured phases. It's the central hub for your vibe-coding workflow - you plan in VibeOS, then execute in your favorite AI coding tools (Lovable, Bolt, V0, etc.).
+
+## Features
+
+- **Phase-Based Workflow** - Organize projects through: Brainstorm → Specs → Design → Development → Testing → Deployment → Blueprint
+- **Context Awareness** - Never lose track of decisions across project phases
+- **Tool Tracking** - Track which AI tools you use for each phase
+- **Progress Tracking** - Manual checks ensure real progress, not just code generation
+- **Blueprint Documentation** - Complete project documentation with context and outcomes
+- **Dark/Light Mode** - Full theme support with system preference detection
+- **PWA Support** - Install as a native app on any device
+- **Mobile Responsive** - Works seamlessly on mobile, tablet, and desktop
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router, Turbopack)
+- **React**: 19
+- **TypeScript**: Full type safety
+- **Styling**: Tailwind CSS 4
+- **UI Components**: Radix UI + shadcn/ui
+- **Deployment**: Vercel
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm, yarn, pnpm, or bun
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/nikhilbhima/VibeOS.git
+cd VibeOS
+
+# Install dependencies
+npm install
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create a `.env.local` file for local development:
 
-## Learn More
+```env
+# Set to false to disable access gate
+NEXT_PUBLIC_ACCESS_REQUIRED=true
 
-To learn more about Next.js, take a look at the following resources:
+# App URL for Open Graph images
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+VibeOS/
+├── app/
+│   ├── layout.tsx          # Root layout with providers
+│   ├── page.tsx            # Homepage with chat interface
+│   └── workspace/          # Workspace pages
+├── components/
+│   ├── AccessGate.tsx      # Access control system
+│   ├── Sidebar.tsx         # Navigation sidebar
+│   ├── ChatCard.tsx        # Chat input component
+│   ├── QuickActions.tsx    # Mode selection buttons
+│   └── ui/                 # shadcn/ui components
+├── lib/
+│   └── utils.ts            # Utility functions
+└── public/
+    └── manifest.json       # PWA manifest
+```
 
-## Deploy on Vercel
+## Available Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run dev      # Start development server
+npm run build    # Build for production
+npm run start    # Start production server
+npm run lint     # Run ESLint
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Current Status
+
+This is a **frontend-only** implementation. All data is currently mocked for demonstration purposes. Backend integration is planned for future releases.
+
+### Implemented
+- Complete UI/UX design
+- Responsive layout
+- Theme support
+- Access gate system
+- Client-side routing
+- Project phases visualization
+
+### Planned
+- Database integration
+- User authentication
+- AI model integration
+- Real-time collaboration
+- Third-party integrations (Notion, Linear, Slack)
+
+## License
+
+Private repository.
+
+## Links
+
+- **Production**: [vibeos.app](https://vibeos.app)
+- **GitHub**: [nikhilbhima/VibeOS](https://github.com/nikhilbhima/VibeOS)
