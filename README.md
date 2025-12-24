@@ -113,5 +113,5 @@ Private repository.
 
 ## Links
 
-- **Production**: [vibeos.app](https://vibeos.app)
+- **Production**: [getvibeos.com](https://getvibeos.com)
 - **GitHub**: [nikhilbhima/VibeOS](https://github.com/nikhilbhima/VibeOS)
