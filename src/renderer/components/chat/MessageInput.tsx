@@ -8,6 +8,15 @@ interface MessageInputProps {
   className?: string;
 }
 
+/**
+ * Premium MessageInput Component
+ *
+ * Design Philosophy: Elevated composition area
+ * - Glass-morphism container with glow on focus
+ * - Premium send button with gradient
+ * - Refined action bar with subtle interactions
+ * - Animated mode toggle with indicator
+ */
 export const MessageInput: FC<MessageInputProps> = ({
   onSend,
   isDisabled = false,
@@ -18,7 +27,6 @@ export const MessageInput: FC<MessageInputProps> = ({
   const [isFocused, setIsFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Auto-resize textarea
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
@@ -45,104 +53,142 @@ export const MessageInput: FC<MessageInputProps> = ({
   };
 
   return (
-    <div className={cn('p-4 bg-bg-surface/50', className)}>
-      <div
-        className={cn(
-          'relative rounded-xl border transition-all duration-200',
-          isFocused
-            ? 'border-accent/50 shadow-lg shadow-accent/5 bg-bg-surface'
-            : 'border-border-default bg-bg-elevated/50 hover:border-border-strong'
-        )}
-      >
-        {/* Main input area */}
-        <div className="flex items-end gap-2 p-3">
-          <textarea
-            ref={textareaRef}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            onKeyDown={handleKeyDown}
-            placeholder={placeholder}
-            disabled={isDisabled}
-            rows={1}
-            className={cn(
-              'flex-1 bg-transparent text-[15px] text-text-primary',
-              'placeholder:text-text-muted',
-              'resize-none outline-none',
-              'min-h-[24px] max-h-[200px]',
-              isDisabled && 'opacity-50 cursor-not-allowed'
-            )}
-          />
+    <div
+      className={cn(
+        'p-4',
+        'bg-gradient-to-t from-bg-surface/80 to-bg-surface/40',
+        'backdrop-blur-sm',
+        'border-t border-white/[0.04]',
+        className
+      )}
+    >
+      {/* Input container */}
+      <div className="relative">
+        {/* Outer glow on focus */}
+        <div
+          className={cn(
+            'absolute -inset-px rounded-[14px] transition-opacity duration-300',
+            'bg-gradient-to-b from-accent/25 via-accent/10 to-accent/5',
+            isFocused ? 'opacity-100' : 'opacity-0'
+          )}
+        />
 
-          {/* Send button */}
-          <button
-            onClick={handleSubmit}
-            disabled={!value.trim() || isDisabled}
-            className={cn(
-              'flex-shrink-0 p-2 rounded-lg transition-all duration-150',
-              value.trim() && !isDisabled
-                ? 'bg-accent text-white hover:bg-accent-hover shadow-md shadow-accent/20'
-                : 'bg-bg-elevated text-text-muted cursor-not-allowed'
-            )}
-          >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
+        <div
+          className={cn(
+            'relative rounded-xl overflow-hidden',
+            'bg-bg-surface/90 backdrop-blur-xl',
+            'ring-1 ring-inset',
+            isFocused
+              ? 'ring-accent/40'
+              : 'ring-white/[0.08] hover:ring-white/[0.12]',
+            'shadow-[0_4px_16px_-4px_rgba(0,0,0,0.3),inset_0_1px_0_0_rgba(255,255,255,0.04)]',
+            'transition-all duration-200'
+          )}
+        >
+          {/* Main input area */}
+          <div className="flex items-end gap-2 p-3">
+            <textarea
+              ref={textareaRef}
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              onKeyDown={handleKeyDown}
+              placeholder={placeholder}
+              disabled={isDisabled}
+              rows={1}
+              className={cn(
+                'flex-1 bg-transparent',
+                'text-[15px] text-text-primary leading-relaxed',
+                'placeholder:text-text-muted/60',
+                'resize-none outline-none',
+                'min-h-[24px] max-h-[200px]',
+                isDisabled && 'opacity-50 cursor-not-allowed'
+              )}
+            />
+
+            {/* Send button */}
+            <button
+              onClick={handleSubmit}
+              disabled={!value.trim() || isDisabled}
+              className={cn(
+                'flex-shrink-0 p-2.5 rounded-lg',
+                'transition-all duration-150',
+                value.trim() && !isDisabled
+                  ? cn(
+                      'bg-gradient-to-b from-[hsl(25,90%,52%)] to-[hsl(25,85%,45%)]',
+                      'text-white',
+                      'shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15),0_1px_2px_0_rgba(0,0,0,0.15),0_2px_8px_-2px_rgba(234,88,12,0.35)]',
+                      'hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),0_4px_12px_-2px_rgba(234,88,12,0.45)]',
+                      'hover:translate-y-[-1px] active:translate-y-[0.5px]'
+                    )
+                  : cn(
+                      'bg-white/[0.04] text-text-muted',
+                      'cursor-not-allowed'
+                    )
+              )}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 19V5m0 0l-7 7m7-7l7 7"
-              />
-            </svg>
-          </button>
-        </div>
-
-        {/* Action bar */}
-        <div className="flex items-center justify-between px-3 pb-2">
-          <div className="flex items-center gap-1">
-            {/* Attach file */}
-            <ActionButton icon={<AttachIcon />} label="Attach" />
-
-            {/* Add context */}
-            <ActionButton icon={<PlusIcon />} label="Add context" />
-
-            {/* Quick prompts */}
-            <ActionButton icon={<SparkleIcon />} label="Prompts" />
+              <SendIcon className="w-4 h-4" />
+            </button>
           </div>
 
-          {/* Keyboard hint */}
-          <div className="flex items-center gap-2 text-xs text-text-muted">
-            <span>
-              <kbd className="px-1 py-0.5 bg-bg-elevated rounded text-[10px]">
-                Enter
-              </kbd>{' '}
-              to send
-            </span>
-            <span className="text-border-default">|</span>
-            <span>
-              <kbd className="px-1 py-0.5 bg-bg-elevated rounded text-[10px]">
-                Shift + Enter
-              </kbd>{' '}
-              for new line
-            </span>
+          {/* Action bar */}
+          <div
+            className={cn(
+              'flex items-center justify-between px-3 pb-2.5',
+              'border-t border-white/[0.04]',
+              'bg-white/[0.02]'
+            )}
+          >
+            <div className="flex items-center gap-0.5">
+              <ActionButton icon={<AttachIcon />} label="Attach" />
+              <ActionButton icon={<PlusIcon />} label="Context" />
+              <ActionButton icon={<SparkleIcon />} label="Prompts" />
+            </div>
+
+            {/* Keyboard hints */}
+            <div className="flex items-center gap-3 text-[11px] text-text-muted">
+              <span className="flex items-center gap-1">
+                <kbd
+                  className={cn(
+                    'px-1.5 py-0.5 rounded',
+                    'bg-white/[0.04] text-text-muted',
+                    'ring-1 ring-inset ring-white/[0.06]',
+                    'font-mono text-[10px]'
+                  )}
+                >
+                  Enter
+                </kbd>
+                <span>send</span>
+              </span>
+              <span className="text-white/[0.1]">|</span>
+              <span className="flex items-center gap-1">
+                <kbd
+                  className={cn(
+                    'px-1.5 py-0.5 rounded',
+                    'bg-white/[0.04] text-text-muted',
+                    'ring-1 ring-inset ring-white/[0.06]',
+                    'font-mono text-[10px]'
+                  )}
+                >
+                  Shift+Enter
+                </kbd>
+                <span>new line</span>
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Mode indicator */}
-      <div className="flex items-center justify-center mt-2">
+      {/* Mode toggle */}
+      <div className="flex items-center justify-center mt-3">
         <ModeToggle />
       </div>
     </div>
   );
 };
 
-// Action button component
+// Action button
 const ActionButton: FC<{
   icon: JSX.Element;
   label: string;
@@ -151,71 +197,121 @@ const ActionButton: FC<{
   <button
     onClick={onClick}
     className={cn(
-      'flex items-center gap-1.5 px-2 py-1 rounded-md',
-      'text-xs text-text-muted hover:text-text-secondary',
-      'hover:bg-bg-hover transition-colors'
+      'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg',
+      'text-xs font-medium text-text-muted',
+      'hover:text-text-secondary hover:bg-white/[0.04]',
+      'transition-all duration-150'
     )}
   >
-    <span className="w-4 h-4">{icon}</span>
+    <span className="w-3.5 h-3.5">{icon}</span>
     <span>{label}</span>
   </button>
 );
 
-// Mode toggle (Plan/Build)
+// Mode toggle with animated indicator
 const ModeToggle: FC = () => {
   const [mode, setMode] = useState<'plan' | 'build'>('build');
 
   return (
-    <div className="flex items-center gap-1 p-0.5 bg-bg-elevated rounded-lg">
+    <div
+      className={cn(
+        'relative flex items-center gap-0.5 p-1',
+        'bg-white/[0.03] rounded-lg',
+        'ring-1 ring-inset ring-white/[0.06]'
+      )}
+    >
+      {/* Animated background pill */}
+      <div
+        className={cn(
+          'absolute top-1 h-[calc(100%-8px)] rounded-md',
+          'bg-white/[0.08]',
+          'shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]',
+          'transition-all duration-200 ease-out'
+        )}
+        style={{
+          width: 'calc(50% - 2px)',
+          left: mode === 'plan' ? '4px' : 'calc(50% + 2px)',
+        }}
+      />
+
       <button
         onClick={() => setMode('plan')}
         className={cn(
-          'px-3 py-1 text-xs font-medium rounded-md transition-all duration-150',
-          mode === 'plan'
-            ? 'bg-bg-surface text-text-primary shadow-sm'
-            : 'text-text-muted hover:text-text-secondary'
+          'relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-md',
+          'text-xs font-medium',
+          'transition-colors duration-150',
+          mode === 'plan' ? 'text-text-primary' : 'text-text-muted'
         )}
       >
-        Plan
+        <PlanIcon className="h-3.5 w-3.5" />
+        <span>Plan</span>
       </button>
+
       <button
         onClick={() => setMode('build')}
         className={cn(
-          'px-3 py-1 text-xs font-medium rounded-md transition-all duration-150',
-          mode === 'build'
-            ? 'bg-bg-surface text-text-primary shadow-sm'
-            : 'text-text-muted hover:text-text-secondary'
+          'relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-md',
+          'text-xs font-medium',
+          'transition-colors duration-150',
+          mode === 'build' ? 'text-text-primary' : 'text-text-muted'
         )}
       >
-        Build
+        <BuildIcon className="h-3.5 w-3.5" />
+        <span>Build</span>
       </button>
     </div>
   );
 };
 
 // Icons
+const SendIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
+    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+  </svg>
+);
+
 const AttachIcon: FC = () => (
-  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+  <svg viewBox="0 0 20 20" fill="currentColor">
     <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
+      fillRule="evenodd"
+      d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+      clipRule="evenodd"
     />
   </svg>
 );
 
 const PlusIcon: FC = () => (
-  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+  <svg viewBox="0 0 20 20" fill="currentColor">
+    <path
+      fillRule="evenodd"
+      d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+      clipRule="evenodd"
+    />
   </svg>
 );
 
 const SparkleIcon: FC = () => (
-  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+  <svg viewBox="0 0 20 20" fill="currentColor">
     <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+      fillRule="evenodd"
+      d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+
+const PlanIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
+    <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
+  </svg>
+);
+
+const BuildIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
+    <path
+      fillRule="evenodd"
+      d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
+      clipRule="evenodd"
     />
   </svg>
 );

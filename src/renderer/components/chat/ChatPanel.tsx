@@ -10,6 +10,15 @@ interface ChatPanelProps {
   projectName?: string;
 }
 
+/**
+ * Premium ChatPanel Component
+ *
+ * Design Philosophy: Professional conversation interface
+ * - Glass-morphism header with status indicator
+ * - Seamless message flow with subtle animations
+ * - Collapsible activity feed sidebar
+ * - Premium input area with focus effects
+ */
 export const ChatPanel: FC<ChatPanelProps> = ({ className, projectName }) => {
   const [messages, setMessages] = useState(mockMessages);
   const [isStreaming, setIsStreaming] = useState(false);
@@ -25,7 +34,6 @@ export const ChatPanel: FC<ChatPanelProps> = ({ className, projectName }) => {
   }, [messages]);
 
   const handleSendMessage = (content: string) => {
-    // Add user message
     const userMessage = {
       id: Date.now().toString(),
       role: 'user' as const,
@@ -34,13 +42,13 @@ export const ChatPanel: FC<ChatPanelProps> = ({ className, projectName }) => {
     };
     setMessages((prev) => [...prev, userMessage]);
 
-    // Simulate assistant response
     setIsStreaming(true);
     setTimeout(() => {
       const assistantMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant' as const,
-        content: "I'll help you with that. Let me analyze your request and start building...",
+        content:
+          "I'll help you with that. Let me analyze your request and start building...",
         timestamp: new Date(),
         thinkingTime: 12,
         toolsUsed: ['Read', 'Write', 'Edit'],
@@ -53,35 +61,109 @@ export const ChatPanel: FC<ChatPanelProps> = ({ className, projectName }) => {
   return (
     <div className={cn('flex flex-col h-full bg-bg-base', className)}>
       {/* Chat header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle">
+      <div
+        className={cn(
+          'flex items-center justify-between px-4 py-3',
+          'bg-bg-surface/60 backdrop-blur-md',
+          'border-b border-white/[0.04]',
+          'shadow-[inset_0_-1px_0_0_rgba(0,0,0,0.1)]'
+        )}
+      >
         <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-accent to-orange-600 flex items-center justify-center">
+          {/* Claude avatar */}
+          <div
+            className={cn(
+              'relative h-9 w-9 rounded-xl',
+              'bg-gradient-to-br from-[hsl(25,90%,52%)] to-[hsl(20,80%,40%)]',
+              'flex items-center justify-center',
+              'shadow-[0_2px_8px_-2px_rgba(234,88,12,0.4),inset_0_1px_0_0_rgba(255,255,255,0.15)]',
+              'ring-1 ring-white/10'
+            )}
+          >
             <ClaudeIcon className="h-5 w-5 text-white" />
+            {/* Status indicator */}
+            <span
+              className={cn(
+                'absolute -bottom-0.5 -right-0.5',
+                'h-3 w-3 rounded-full',
+                'border-2 border-bg-surface',
+                isStreaming
+                  ? 'bg-amber-500 animate-pulse'
+                  : 'bg-emerald-500 shadow-[0_0_6px_1px_rgba(16,185,129,0.4)]'
+              )}
+            />
           </div>
+
           <div>
-            <h2 className="text-sm font-medium text-text-primary">Claude</h2>
+            <h2 className="text-sm font-semibold text-text-primary tracking-[-0.01em]">
+              Claude
+            </h2>
             <p className="text-xs text-text-muted">
-              {isStreaming ? 'Thinking...' : 'Ready to help'}
+              {isStreaming ? (
+                <span className="flex items-center gap-1.5">
+                  <span className="inline-flex gap-0.5">
+                    <span
+                      className="h-1 w-1 rounded-full bg-accent animate-bounce"
+                      style={{ animationDelay: '0ms' }}
+                    />
+                    <span
+                      className="h-1 w-1 rounded-full bg-accent animate-bounce"
+                      style={{ animationDelay: '150ms' }}
+                    />
+                    <span
+                      className="h-1 w-1 rounded-full bg-accent animate-bounce"
+                      style={{ animationDelay: '300ms' }}
+                    />
+                  </span>
+                  Thinking...
+                </span>
+              ) : (
+                'Ready to help'
+              )}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           {/* Activity toggle */}
           <button
             onClick={() => setShowActivity(!showActivity)}
             className={cn(
-              'px-3 py-1.5 text-xs rounded-lg transition-colors',
+              'flex items-center gap-1.5 px-3 py-1.5 rounded-lg',
+              'text-xs font-medium',
+              'transition-all duration-150',
               showActivity
-                ? 'bg-bg-elevated text-text-primary'
-                : 'text-text-muted hover:text-text-secondary hover:bg-bg-hover'
+                ? cn(
+                    'bg-white/[0.08] text-text-primary',
+                    'ring-1 ring-inset ring-white/[0.08]'
+                  )
+                : 'text-text-muted hover:text-text-secondary hover:bg-white/[0.04]'
             )}
           >
-            Activity
+            <ActivityIcon className="h-3.5 w-3.5" />
+            <span>Activity</span>
+            {showActivity && (
+              <span
+                className={cn(
+                  'ml-1 px-1.5 py-0.5 rounded text-[10px] font-medium',
+                  'bg-accent/15 text-accent'
+                )}
+              >
+                {mockActivities.filter((a) => a.status === 'running').length ||
+                  '0'}
+              </span>
+            )}
           </button>
 
           {/* More options */}
-          <button className="p-2 text-text-muted hover:text-text-primary hover:bg-bg-hover rounded-lg transition-colors">
+          <button
+            className={cn(
+              'p-2 rounded-lg',
+              'text-text-muted hover:text-text-primary',
+              'hover:bg-white/[0.04]',
+              'transition-all duration-150'
+            )}
+          >
             <MoreIcon className="h-4 w-4" />
           </button>
         </div>
@@ -100,18 +182,18 @@ export const ChatPanel: FC<ChatPanelProps> = ({ className, projectName }) => {
           <div ref={messagesEndRef} />
 
           {/* Input area */}
-          <MessageInput
-            onSend={handleSendMessage}
-            isDisabled={isStreaming}
-            className="border-t border-border-subtle"
-          />
+          <MessageInput onSend={handleSendMessage} isDisabled={isStreaming} />
         </div>
 
         {/* Activity feed (collapsible) */}
         {showActivity && (
           <ActivityFeed
             activities={mockActivities}
-            className="w-64 border-l border-border-subtle"
+            className={cn(
+              'w-72 flex-shrink-0',
+              'border-l border-white/[0.04]',
+              'bg-bg-surface/30 backdrop-blur-sm'
+            )}
           />
         )}
       </div>
@@ -122,13 +204,24 @@ export const ChatPanel: FC<ChatPanelProps> = ({ className, projectName }) => {
 // Icons
 const ClaudeIcon: FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+    <circle cx="12" cy="12" r="3" />
+  </svg>
+);
+
+const ActivityIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
+    <path
+      fillRule="evenodd"
+      d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"
+      clipRule="evenodd"
+    />
   </svg>
 );
 
 const MoreIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
+    <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
   </svg>
 );
 
