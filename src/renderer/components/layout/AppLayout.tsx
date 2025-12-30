@@ -8,6 +8,8 @@ interface AppLayoutProps {
   showSidebar?: boolean;
   showTopBar?: boolean;
   className?: string;
+  onOpenCommandPalette?: () => void;
+  onOpenSettings?: () => void;
 }
 
 export const AppLayout: FC<AppLayoutProps> = ({
@@ -15,12 +17,17 @@ export const AppLayout: FC<AppLayoutProps> = ({
   showSidebar = true,
   showTopBar = true,
   className,
+  onOpenCommandPalette,
+  onOpenSettings,
 }) => {
   return (
     <div className="flex h-screen flex-col bg-bg-base overflow-hidden">
       {/* Custom titlebar drag region */}
       <div className="drag-region h-12 flex-shrink-0 border-b border-border-subtle bg-bg-surface/50 backdrop-blur-xl">
-        <TopBar />
+        <TopBar
+          onOpenCommandPalette={onOpenCommandPalette}
+          onOpenSettings={onOpenSettings}
+        />
       </div>
 
       {/* Main content area */}

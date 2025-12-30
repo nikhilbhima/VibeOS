@@ -6,6 +6,8 @@ interface TopBarProps {
   projectName?: string;
   isLoading?: boolean;
   className?: string;
+  onOpenCommandPalette?: () => void;
+  onOpenSettings?: () => void;
 }
 
 type ViewTab = 'preview' | 'code' | 'changes';
@@ -23,6 +25,8 @@ export const TopBar: FC<TopBarProps> = ({
   projectName,
   isLoading = false,
   className,
+  onOpenCommandPalette,
+  onOpenSettings,
 }) => {
   const [activeTab, setActiveTab] = useState<ViewTab>('preview');
   const [selectedModel, setSelectedModel] = useState<ModelType>('sonnet');
@@ -154,6 +158,7 @@ export const TopBar: FC<TopBarProps> = ({
         <div className="flex items-center gap-2 min-w-[200px] justify-end">
           {/* Search / Command Palette */}
           <button
+            onClick={onOpenCommandPalette}
             className={cn(
               'flex items-center gap-2 px-3 py-1.5',
               'text-xs text-text-muted',
@@ -271,12 +276,14 @@ export const TopBar: FC<TopBarProps> = ({
 
           {/* Settings */}
           <button
+            onClick={onOpenSettings}
             className={cn(
               'p-2 rounded-lg',
               'text-text-muted hover:text-text-primary',
               'hover:bg-white/[0.04]',
               'transition-all duration-150'
             )}
+            title="Settings (Cmd+,)"
           >
             <SettingsIcon className="h-4 w-4" />
           </button>

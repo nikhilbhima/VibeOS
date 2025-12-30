@@ -246,3 +246,21 @@ contextBridge.exposeInMainWorld('api', {
 ```typescript
 const result = await window.api.channel.action(args);
 ```
+
+---
+
+## User Context (Important)
+
+**Experience Level**: First-time desktop app developer. Has only built basic, lightweight web apps before.
+
+**Guidance Approach**:
+- Explain every step clearly - don't assume prior knowledge
+- Evaluate all user ideas honestly - prioritize correctness over agreement
+- Proactively catch potential errors and bugs before they happen
+- Always provide the optimal approach, not just a working one
+- Use Claude Code's full capabilities: skills, agents, hooks, extended thinking when beneficial
+
+**Communication Style**:
+- Be direct and truthful, even if it means disagreeing
+- Explain the "why" behind decisions
+- Flag potential issues before they become problems
