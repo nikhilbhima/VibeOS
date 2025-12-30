@@ -6,21 +6,21 @@
 
 @layer base {
   :root {
-    /* Background colors - warm neutrals */
-    --bg-base: 30 18% 5%;
-    --bg-surface: 30 15% 8%;
-    --bg-elevated: 30 12% 12%;
-    --bg-hover: 30 10% 15%;
+    /* Background colors - pure black */
+    --bg-base: 0 0% 0%;
+    --bg-surface: 0 0% 5%;
+    --bg-elevated: 0 0% 9%;
+    --bg-hover: 0 0% 12%;
 
     /* Border colors */
-    --border-subtle: 30 10% 15%;
-    --border-default: 30 10% 20%;
-    --border-strong: 30 10% 30%;
+    --border-subtle: 0 0% 12%;
+    --border-default: 0 0% 16%;
+    --border-strong: 0 0% 24%;
 
-    /* Text colors */
-    --text-primary: 30 20% 95%;
-    --text-secondary: 30 10% 65%;
-    --text-muted: 30 8% 45%;
+    /* Text colors - neutral */
+    --text-primary: 0 0% 93%;
+    --text-secondary: 0 0% 63%;
+    --text-muted: 0 0% 45%;
 
     /* Accent - warm orange (Claude-inspired) */
     --accent: 25 84% 55%;

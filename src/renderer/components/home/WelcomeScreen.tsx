@@ -4,6 +4,15 @@ import { cn } from '../../lib/utils';
 interface WelcomeScreenProps {
   className?: string;
   onStartProject?: (prompt: string) => void;
+  onOpenProject?: (projectId: string) => void;
+}
+
+interface RecentProject {
+  id: string;
+  name: string;
+  description: string;
+  lastOpened: string;
+  framework: 'react' | 'next' | 'vue' | 'svelte';
 }
 
 /**
@@ -18,17 +27,25 @@ interface WelcomeScreenProps {
 export const WelcomeScreen: FC<WelcomeScreenProps> = ({
   className,
   onStartProject,
+  onOpenProject,
 }) => {
   const [prompt, setPrompt] = useState('');
   const [isFocused, setIsFocused] = useState(false);
-  const [hoveredStarter, setHoveredStarter] = useState<string | null>(null);
+  const [hoveredProject, setHoveredProject] = useState<string | null>(null);
 
-  const quickStarters = [
-    { id: 'landing', label: 'Landing Page', icon: LayoutIcon, color: 'from-violet-500 to-purple-600' },
-    { id: 'dashboard', label: 'Dashboard', icon: ChartIcon, color: 'from-blue-500 to-cyan-500' },
-    { id: 'ecommerce', label: 'E-commerce', icon: CartIcon, color: 'from-emerald-500 to-teal-500' },
-    { id: 'portfolio', label: 'Portfolio', icon: SparklesIcon, color: 'from-amber-500 to-orange-500' },
+  // Mock recent projects - in real app this would come from store/database
+  const recentProjects: RecentProject[] = [
+    { id: '1', name: 'SaaS Landing', description: 'Marketing landing page with pricing', lastOpened: '2 hours ago', framework: 'next' },
+    { id: '2', name: 'Admin Dashboard', description: 'Analytics and user management', lastOpened: 'Yesterday', framework: 'react' },
+    { id: '3', name: 'Portfolio Site', description: 'Personal portfolio with blog', lastOpened: '3 days ago', framework: 'next' },
   ];
+
+  const frameworkIcons: Record<string, { icon: FC<{ className?: string }>, color: string }> = {
+    react: { icon: ReactIcon, color: 'text-cyan-400' },
+    next: { icon: NextIcon, color: 'text-white' },
+    vue: { icon: VueIcon, color: 'text-emerald-400' },
+    svelte: { icon: SvelteIcon, color: 'text-orange-500' },
+  };
 
   const handleSubmit = () => {
     if (prompt.trim() && onStartProject) {
@@ -55,21 +72,6 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = ({
         {/* Base gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-bg-base via-bg-base to-bg-surface" />
 
-        {/* Radial gradients for depth */}
-        <div
-          className={cn(
-            'absolute top-0 left-1/4 w-[600px] h-[600px]',
-            'bg-gradient-radial from-accent/8 via-accent/2 to-transparent',
-            'blur-3xl opacity-60'
-          )}
-        />
-        <div
-          className={cn(
-            'absolute bottom-0 right-1/4 w-[500px] h-[500px]',
-            'bg-gradient-radial from-purple-500/8 via-purple-500/2 to-transparent',
-            'blur-3xl opacity-50'
-          )}
-        />
         <div
           className={cn(
             'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
@@ -95,13 +97,12 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = ({
         <div className="flex justify-center mb-8">
           <div
             className={cn(
-              'h-14 w-14 rounded-2xl flex items-center justify-center',
-              'bg-gradient-to-br from-[hsl(25,90%,52%)] to-[hsl(20,80%,40%)]',
-              'shadow-[0_4px_20px_-4px_rgba(234,88,12,0.5),inset_0_1px_0_0_rgba(255,255,255,0.2)]',
-              'ring-1 ring-white/10'
+              'h-16 w-16 rounded-2xl flex items-center justify-center',
+              'bg-[#171717]',
+              'ring-1 ring-white/[0.08]'
             )}
           >
-            <BoltIcon className="h-7 w-7 text-white" />
+            <VibeIcon className="h-7 w-7" />
           </div>
         </div>
 
@@ -184,18 +185,6 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = ({
                   <span>Attach</span>
                 </button>
 
-                {/* Template button */}
-                <button
-                  className={cn(
-                    'flex items-center gap-1.5 px-3 py-1.5 rounded-lg',
-                    'text-xs font-medium text-text-muted',
-                    'hover:text-text-secondary hover:bg-white/[0.04]',
-                    'transition-all duration-150'
-                  )}
-                >
-                  <TemplateIcon className="h-4 w-4" />
-                  <span>Templates</span>
-                </button>
               </div>
 
               {/* Send button */}
@@ -227,48 +216,80 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = ({
           </div>
         </div>
 
-        {/* Quick starters */}
-        <div className="mt-8">
-          <p className="text-xs text-text-muted text-center mb-4 tracking-wide uppercase">
-            Or start with a template
-          </p>
-          <div className="flex items-center justify-center gap-3 flex-wrap">
-            {quickStarters.map((starter) => (
+        {/* Recent Projects */}
+        {recentProjects.length > 0 && (
+          <div className="mt-10">
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-xs text-text-muted tracking-wide uppercase">
+                Recent Projects
+              </p>
               <button
-                key={starter.id}
-                onClick={() =>
-                  setPrompt(`Create a ${starter.label.toLowerCase()}`)
-                }
-                onMouseEnter={() => setHoveredStarter(starter.id)}
-                onMouseLeave={() => setHoveredStarter(null)}
                 className={cn(
-                  'group relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl',
-                  'bg-white/[0.03] hover:bg-white/[0.06]',
-                  'ring-1 ring-inset ring-white/[0.06] hover:ring-white/[0.1]',
-                  'transition-all duration-200',
-                  'hover:translate-y-[-1px]'
+                  'text-xs text-text-muted hover:text-text-secondary',
+                  'transition-colors duration-150'
                 )}
               >
-                {/* Icon with gradient background */}
-                <div
-                  className={cn(
-                    'h-7 w-7 rounded-lg flex items-center justify-center',
-                    'bg-gradient-to-br',
-                    starter.color,
-                    'shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2)]',
-                    'transition-transform duration-200',
-                    hoveredStarter === starter.id && 'scale-110'
-                  )}
-                >
-                  <starter.icon className="h-3.5 w-3.5 text-white" />
-                </div>
-                <span className="text-sm font-medium text-text-secondary group-hover:text-text-primary transition-colors">
-                  {starter.label}
-                </span>
+                View all
               </button>
-            ))}
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              {recentProjects.map((project) => {
+                const framework = frameworkIcons[project.framework];
+                const FrameworkIcon = framework.icon;
+                return (
+                  <button
+                    key={project.id}
+                    onClick={() => onOpenProject?.(project.id)}
+                    onMouseEnter={() => setHoveredProject(project.id)}
+                    onMouseLeave={() => setHoveredProject(null)}
+                    className={cn(
+                      'group relative text-left p-4 rounded-xl',
+                      'bg-white/[0.02] hover:bg-white/[0.04]',
+                      'ring-1 ring-inset ring-white/[0.06] hover:ring-white/[0.1]',
+                      'transition-all duration-200',
+                      'hover:translate-y-[-2px]',
+                      hoveredProject === project.id && 'shadow-lg shadow-black/20'
+                    )}
+                  >
+                    {/* Project header */}
+                    <div className="flex items-start justify-between mb-3">
+                      <div
+                        className={cn(
+                          'h-8 w-8 rounded-lg flex items-center justify-center',
+                          'bg-white/[0.04] ring-1 ring-inset ring-white/[0.06]'
+                        )}
+                      >
+                        <FrameworkIcon className={cn('h-4 w-4', framework.color)} />
+                      </div>
+                      <span className="text-[10px] text-text-muted">
+                        {project.lastOpened}
+                      </span>
+                    </div>
+
+                    {/* Project info */}
+                    <h3 className="text-sm font-medium text-text-primary mb-1 truncate">
+                      {project.name}
+                    </h3>
+                    <p className="text-xs text-text-muted line-clamp-2">
+                      {project.description}
+                    </p>
+
+                    {/* Hover arrow */}
+                    <div
+                      className={cn(
+                        'absolute bottom-4 right-4 opacity-0 translate-x-1',
+                        'group-hover:opacity-100 group-hover:translate-x-0',
+                        'transition-all duration-200'
+                      )}
+                    >
+                      <ArrowIcon className="h-4 w-4 text-text-muted" />
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Keyboard hint */}
         <div className="mt-14 text-center">
@@ -294,9 +315,21 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = ({
 };
 
 // Icons
-const BoltIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M13 3L4 14h7l-2 7 9-11h-7l2-7z" />
+const VibeIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 16 16" fill="none">
+    <path
+      d="M3 4L8 12L13 4"
+      stroke="url(#vibe-gradient-welcome)"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <defs>
+      <linearGradient id="vibe-gradient-welcome" x1="3" y1="4" x2="13" y2="12" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#F472B6" />
+        <stop offset="1" stopColor="#FB923C" />
+      </linearGradient>
+    </defs>
   </svg>
 );
 
@@ -310,12 +343,6 @@ const AttachIcon: FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
-const TemplateIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
-    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-  </svg>
-);
-
 const ArrowIcon: FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 20 20" fill="currentColor">
     <path
@@ -326,31 +353,31 @@ const ArrowIcon: FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
-const LayoutIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
-    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+// Framework icons
+const ReactIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none" />
+    <ellipse cx="12" cy="12" rx="10" ry="4" />
+    <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)" />
+    <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)" />
   </svg>
 );
 
-const ChartIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
-    <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+const NextIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2Zm-1.5 14.5V7l7 4.75-7 4.75Z" />
   </svg>
 );
 
-const CartIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
-    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+const VueIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M19.2 2H14.4L12 6 9.6 2H4.8L12 14.4 19.2 2ZM4.8 2H0L12 22 24 2H19.2L12 14.4 4.8 2Z" />
   </svg>
 );
 
-const SparklesIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
-    <path
-      fillRule="evenodd"
-      d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z"
-      clipRule="evenodd"
-    />
+const SvelteIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M20.5 5.5c-1.5-2.5-4.5-3.5-7-2.5l-4 2c-2 1-3 3-3 5 0 .5 0 1 .2 1.5-.8.5-1.4 1.2-1.7 2-.5 1.5-.2 3 .5 4.5 1.5 2.5 4.5 3.5 7 2.5l4-2c2-1 3-3 3-5 0-.5 0-1-.2-1.5.8-.5 1.4-1.2 1.7-2 .5-1.5.2-3-.5-4.5Z" />
   </svg>
 );
 
@@ -361,6 +388,179 @@ const CommandIcon: FC<{ className?: string }> = ({ className }) => (
       d="M6 3a3 3 0 00-3 3v1h2V6a1 1 0 011-1h1V3H6zM3 13v1a3 3 0 003 3h1v-2H6a1 1 0 01-1-1v-1H3zm14-7V6a3 3 0 00-3-3h-1v2h1a1 1 0 011 1v1h2zm0 7v1a1 1 0 01-1 1h-1v2h1a3 3 0 003-3v-1h-2zM8 8h4v4H8V8z"
       clipRule="evenodd"
     />
+  </svg>
+);
+
+// Mode toggle with animated indicator
+const ModeToggle: FC = () => {
+  const [mode, setMode] = useState<'plan' | 'build'>('build');
+
+  return (
+    <div
+      className={cn(
+        'relative flex items-center gap-0.5 p-1',
+        'bg-white/[0.03] rounded-lg',
+        'ring-1 ring-inset ring-white/[0.06]'
+      )}
+    >
+      <div
+        className={cn(
+          'absolute top-1 h-[calc(100%-8px)] rounded-md',
+          'bg-white/[0.08]',
+          'shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]',
+          'transition-all duration-200 ease-out'
+        )}
+        style={{
+          width: 'calc(50% - 2px)',
+          left: mode === 'plan' ? '4px' : 'calc(50% + 2px)',
+        }}
+      />
+
+      <button
+        onClick={() => setMode('plan')}
+        className={cn(
+          'relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-md',
+          'text-xs font-medium',
+          'transition-colors duration-150',
+          mode === 'plan' ? 'text-text-primary' : 'text-text-muted'
+        )}
+      >
+        <PlanIcon className="h-3.5 w-3.5" />
+        <span>Plan</span>
+      </button>
+
+      <button
+        onClick={() => setMode('build')}
+        className={cn(
+          'relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-md',
+          'text-xs font-medium',
+          'transition-colors duration-150',
+          mode === 'build' ? 'text-text-primary' : 'text-text-muted'
+        )}
+      >
+        <BuildIcon className="h-3.5 w-3.5" />
+        <span>Build</span>
+      </button>
+    </div>
+  );
+};
+
+// Model selector
+type ModelType = 'haiku' | 'sonnet' | 'opus';
+
+const ModelSelector: FC = () => {
+  const [selectedModel, setSelectedModel] = useState<ModelType>('sonnet');
+  const [isOpen, setIsOpen] = useState(false);
+
+  const models: { id: ModelType; label: string; desc: string }[] = [
+    { id: 'haiku', label: 'Haiku', desc: 'Fast' },
+    { id: 'sonnet', label: 'Sonnet', desc: 'Balanced' },
+    { id: 'opus', label: 'Opus', desc: 'Powerful' },
+  ];
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className={cn(
+          'flex items-center gap-2 px-3 py-1.5',
+          'bg-white/[0.03] hover:bg-white/[0.06]',
+          'rounded-lg',
+          'ring-1 ring-inset ring-white/[0.06] hover:ring-white/[0.08]',
+          'transition-all duration-150'
+        )}
+      >
+        <span
+          className={cn(
+            'h-2 w-2 rounded-full',
+            'bg-emerald-500',
+            'shadow-[0_0_6px_1px_rgba(16,185,129,0.4)]'
+          )}
+        />
+        <span className="text-xs font-medium text-text-secondary capitalize">
+          {selectedModel}
+        </span>
+        <ChevronIcon
+          className={cn(
+            'h-3 w-3 text-text-muted transition-transform duration-150',
+            isOpen && 'rotate-180'
+          )}
+        />
+      </button>
+
+      {isOpen && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+          <div
+            className={cn(
+              'absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50',
+              'w-40 py-1',
+              'bg-bg-elevated/95 backdrop-blur-xl',
+              'rounded-lg',
+              'ring-1 ring-white/[0.08]',
+              'shadow-[0_8px_30px_-4px_rgba(0,0,0,0.4)]',
+              'animate-scale-in origin-bottom'
+            )}
+          >
+            {models.map((model) => (
+              <button
+                key={model.id}
+                onClick={() => {
+                  setSelectedModel(model.id);
+                  setIsOpen(false);
+                }}
+                className={cn(
+                  'w-full flex items-center gap-2.5 px-3 py-2',
+                  'text-left transition-colors duration-150',
+                  selectedModel === model.id
+                    ? 'bg-white/[0.06]'
+                    : 'hover:bg-white/[0.04]'
+                )}
+              >
+                <span
+                  className={cn(
+                    'h-2 w-2 rounded-full',
+                    selectedModel === model.id
+                      ? 'bg-emerald-500 shadow-[0_0_6px_1px_rgba(16,185,129,0.4)]'
+                      : 'bg-text-muted/50'
+                  )}
+                />
+                <div className="flex-1">
+                  <span className="text-sm font-medium text-text-primary">
+                    {model.label}
+                  </span>
+                  <span className="text-xs text-text-muted ml-1.5">
+                    {model.desc}
+                  </span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+const PlanIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
+    <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
+  </svg>
+);
+
+const BuildIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
+    <path
+      fillRule="evenodd"
+      d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+
+const ChevronIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6l4 4 4-4" />
   </svg>
 );
 

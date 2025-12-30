@@ -1,4 +1,4 @@
-import { type FC, useState } from 'react';
+import { type FC, useState, useRef, useEffect } from 'react';
 import { cn } from '../../lib/utils';
 import { Avatar } from '../ui/Avatar';
 
@@ -10,17 +10,34 @@ interface TopBarProps {
   onOpenSettings?: () => void;
 }
 
-type ViewTab = 'preview' | 'code' | 'changes';
-type ModelType = 'haiku' | 'sonnet' | 'opus';
-type ModeType = 'plan' | 'build';
+// Mock usage data - in real app, this comes from Claude Code API
+const usageData = {
+  session: {
+    label: '5-Hour Usage',
+    percentage: 8,
+    status: 'good' as const,
+    resetsIn: '2h 53m',
+  },
+  weekly: {
+    label: '7-Day Usage',
+    percentage: 77,
+    status: 'critical' as const,
+    resetsIn: '2d 11h',
+  },
+  model: {
+    label: 'Sonnet (7-Day)',
+    percentage: 1,
+    status: 'good' as const,
+    resetsIn: '4d 11h',
+  },
+};
 
 /**
  * Premium TopBar Component
  *
- * Design Philosophy: Refined luxury with glass-morphism
+ * Design Philosophy: Clean, simple navigation
  * - macOS-style drag region with subtle styling
- * - Animated pill tab selector
- * - Premium micro-interactions throughout
+ * - Minimal controls - just what vibe coders need
  */
 export const TopBar: FC<TopBarProps> = ({
   projectName,
@@ -29,34 +46,29 @@ export const TopBar: FC<TopBarProps> = ({
   onOpenCommandPalette,
   onOpenSettings,
 }) => {
-  const [activeTab, setActiveTab] = useState<ViewTab>('preview');
-  const [selectedModel, setSelectedModel] = useState<ModelType>('sonnet');
-  const [isModelOpen, setIsModelOpen] = useState(false);
-  const [mode, setMode] = useState<ModeType>('build');
+  const [showUsagePanel, setShowUsagePanel] = useState(false);
+  const usagePanelRef = useRef<HTMLDivElement>(null);
 
-  // Mock usage data - in real app, this comes from Claude Code
-  const usage = {
-    tokensUsed: 45200,
-    tokensLimit: 100000,
-    percentage: 45.2,
-  };
+  // Close panel when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (usagePanelRef.current && !usagePanelRef.current.contains(event.target as Node)) {
+        setShowUsagePanel(false);
+      }
+    };
+    if (showUsagePanel) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showUsagePanel]);
 
-  const tabs: { id: ViewTab; label: string }[] = [
-    { id: 'preview', label: 'Preview' },
-    { id: 'code', label: 'Code' },
-    { id: 'changes', label: 'Changes' },
-  ];
-
-  const models: { id: ModelType; label: string; description: string }[] = [
-    { id: 'haiku', label: 'Haiku', description: 'Fast & efficient' },
-    { id: 'sonnet', label: 'Sonnet', description: 'Balanced' },
-    { id: 'opus', label: 'Opus', description: 'Most capable' },
-  ];
+  // Primary usage indicator (weekly is most important)
+  const primaryUsage = usageData.weekly;
 
   return (
     <header
       className={cn(
-        'h-12 flex-shrink-0',
+        'h-12 flex-shrink-0 overflow-visible',
         // Glass morphism background
         'bg-bg-surface/60 backdrop-blur-xl',
         // Subtle bottom border
@@ -77,21 +89,31 @@ export const TopBar: FC<TopBarProps> = ({
           <div className="flex items-center gap-2.5">
             <div
               className={cn(
-                'h-7 w-7 rounded-lg flex items-center justify-center',
-                // Premium gradient
-                'bg-gradient-to-br from-[hsl(25,90%,52%)] to-[hsl(20,80%,40%)]',
-                // Depth with shadows
-                'shadow-[0_2px_8px_-2px_rgba(234,88,12,0.4),inset_0_1px_0_0_rgba(255,255,255,0.2)]',
-                // Loading pulse
+                'h-7 w-7 rounded-[8px] flex items-center justify-center',
+                'bg-[#171717]',
+                'ring-1 ring-white/[0.08]',
                 isLoading && 'animate-pulse'
               )}
             >
+              {/* VibeOS logomark - abstract V, single stroke */}
               <svg
-                className="h-4 w-4 text-white"
-                viewBox="0 0 24 24"
-                fill="currentColor"
+                className="h-[14px] w-[14px]"
+                viewBox="0 0 16 16"
+                fill="none"
               >
-                <path d="M13 3L4 14h7l-2 7 9-11h-7l2-7z" />
+                <path
+                  d="M3 4L8 12L13 4"
+                  stroke="url(#vibe-gradient)"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <defs>
+                  <linearGradient id="vibe-gradient" x1="3" y1="4" x2="13" y2="12" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#F472B6" />
+                    <stop offset="1" stopColor="#FB923C" />
+                  </linearGradient>
+                </defs>
               </svg>
             </div>
 
@@ -116,135 +138,99 @@ export const TopBar: FC<TopBarProps> = ({
             )}
           </div>
 
-          {/* Divider */}
-          <div className="h-4 w-px bg-white/[0.06]" />
-
-          {/* Plan/Build Mode Toggle */}
-          <div
-            className={cn(
-              'relative flex items-center p-0.5',
-              'bg-white/[0.03] rounded-lg',
-              'ring-1 ring-inset ring-white/[0.06]'
-            )}
-          >
-            {/* Animated background */}
-            <div
-              className={cn(
-                'absolute top-0.5 h-[calc(100%-4px)] w-[calc(50%-2px)] rounded-md',
-                'transition-all duration-200 ease-out',
-                mode === 'plan'
-                  ? 'left-0.5 bg-purple-500/20 ring-1 ring-inset ring-purple-500/30'
-                  : 'left-[calc(50%+1px)] bg-emerald-500/20 ring-1 ring-inset ring-emerald-500/30'
-              )}
-            />
-            <button
-              onClick={() => setMode('plan')}
-              className={cn(
-                'relative z-10 flex items-center gap-1.5 px-2.5 py-1',
-                'text-xs font-medium rounded-md',
-                'transition-colors duration-150',
-                mode === 'plan' ? 'text-purple-400' : 'text-text-muted hover:text-text-secondary'
-              )}
-            >
-              <PlanIcon className="h-3.5 w-3.5" />
-              Plan
-            </button>
-            <button
-              onClick={() => setMode('build')}
-              className={cn(
-                'relative z-10 flex items-center gap-1.5 px-2.5 py-1',
-                'text-xs font-medium rounded-md',
-                'transition-colors duration-150',
-                mode === 'build' ? 'text-emerald-400' : 'text-text-muted hover:text-text-secondary'
-              )}
-            >
-              <BuildIcon className="h-3.5 w-3.5" />
-              Build
-            </button>
-          </div>
         </div>
-
-        {/* Center section - View Tabs */}
-        {projectName && (
-          <div className="absolute left-1/2 -translate-x-1/2">
-            <div
-              className={cn(
-                'relative flex items-center gap-0.5 p-1',
-                // Glass container
-                'bg-white/[0.03] rounded-lg',
-                'ring-1 ring-inset ring-white/[0.06]'
-              )}
-            >
-              {/* Animated pill background */}
-              <div
-                className={cn(
-                  'absolute top-1 h-[calc(100%-8px)] rounded-md',
-                  'bg-white/[0.08]',
-                  'shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]',
-                  'transition-all duration-200 ease-out'
-                )}
-                style={{
-                  width: `${100 / tabs.length}%`,
-                  left: `${tabs.findIndex((t) => t.id === activeTab) * (100 / tabs.length)}%`,
-                  transform: 'translateX(4px)',
-                }}
-              />
-
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    'relative z-10 px-4 py-1.5',
-                    'text-xs font-medium rounded-md',
-                    'transition-colors duration-150',
-                    activeTab === tab.id
-                      ? 'text-text-primary'
-                      : 'text-text-muted hover:text-text-secondary'
-                  )}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Right section - Actions */}
         <div className="flex items-center gap-2 min-w-[320px] justify-end">
-          {/* Usage Progress Bar */}
-          <button
-            className={cn(
-              'flex items-center gap-2 px-2.5 py-1.5',
-              'bg-white/[0.03] hover:bg-white/[0.06]',
-              'rounded-lg',
-              'ring-1 ring-inset ring-white/[0.06] hover:ring-white/[0.08]',
-              'transition-all duration-150',
-              'group'
-            )}
-            title={`${usage.tokensUsed.toLocaleString()} / ${usage.tokensLimit.toLocaleString()} tokens`}
-          >
-            {/* Progress bar container */}
-            <div className="w-16 h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+          {/* Usage Circle Indicator */}
+          <div className="relative no-drag" ref={usagePanelRef}>
+            <button
+              onClick={() => setShowUsagePanel(!showUsagePanel)}
+              className={cn(
+                'relative p-1.5 rounded-lg',
+                'hover:bg-white/[0.04]',
+                'transition-all duration-150',
+                showUsagePanel && 'bg-white/[0.04]'
+              )}
+              title="Usage stats"
+            >
+              <UsageCircle percentage={primaryUsage.percentage} status={primaryUsage.status} />
+            </button>
+
+            {/* Usage Panel Popover */}
+            {showUsagePanel && (
               <div
                 className={cn(
-                  'h-full rounded-full transition-all duration-300',
-                  usage.percentage < 50
-                    ? 'bg-emerald-500'
-                    : usage.percentage < 80
-                      ? 'bg-amber-500'
-                      : 'bg-red-500'
+                  'absolute right-0 top-full mt-2 z-50',
+                  'w-72 p-4 rounded-xl',
+                  'bg-bg-elevated backdrop-blur-xl',
+                  'border border-white/[0.08]',
+                  'shadow-[0_8px_32px_-8px_rgba(0,0,0,0.8),0_0_0_1px_rgba(255,255,255,0.05)]',
+                  'animate-in'
                 )}
-                style={{ width: `${usage.percentage}%` }}
-              />
-            </div>
-            <span className="text-[10px] font-medium text-text-muted group-hover:text-text-secondary tabular-nums">
-              {usage.percentage.toFixed(0)}%
-            </span>
-          </button>
+              >
+                {/* Header */}
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="h-6 w-6 rounded-lg bg-accent/10 flex items-center justify-center">
+                    <StatsIcon className="h-3.5 w-3.5 text-accent" />
+                  </div>
+                  <span className="text-sm font-medium text-text-primary">Usage Stats</span>
+                </div>
 
-          {/* Divider */}
-          <div className="h-4 w-px bg-white/[0.06]" />
+                {/* Current Session */}
+                <div className="mb-4">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <ClockIcon className="h-3 w-3 text-text-muted" />
+                    <span className="text-[10px] font-semibold text-text-muted uppercase tracking-wide">
+                      Current Session
+                    </span>
+                  </div>
+                  <UsageRow {...usageData.session} />
+                </div>
+
+                {/* Weekly Limits */}
+                <div className="mb-4">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <CalendarIcon className="h-3 w-3 text-text-muted" />
+                    <span className="text-[10px] font-semibold text-text-muted uppercase tracking-wide">
+                      Weekly Limits
+                    </span>
+                  </div>
+                  <div className="space-y-3">
+                    <UsageRow {...usageData.weekly} />
+                    <UsageRow {...usageData.model} />
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center gap-2 pt-3 border-t border-white/[0.06]">
+                  <button
+                    className={cn(
+                      'flex items-center gap-1.5 px-3 py-1.5 rounded-lg',
+                      'text-xs font-medium text-text-muted',
+                      'ring-1 ring-inset ring-white/[0.08]',
+                      'hover:bg-white/[0.04] hover:text-text-secondary',
+                      'transition-all duration-150'
+                    )}
+                  >
+                    <RefreshIcon className="h-3 w-3" />
+                    <span>just now</span>
+                  </button>
+                  <button
+                    className={cn(
+                      'flex items-center gap-1.5 px-3 py-1.5 rounded-lg',
+                      'text-xs font-medium text-text-secondary',
+                      'bg-white/[0.04] hover:bg-white/[0.06]',
+                      'transition-all duration-150'
+                    )}
+                  >
+                    <GridIcon className="h-3 w-3" />
+                    <span>Dashboard</span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Search / Command Palette */}
           <button
@@ -272,97 +258,6 @@ export const TopBar: FC<TopBarProps> = ({
             </kbd>
           </button>
 
-          {/* Divider */}
-          <div className="h-4 w-px bg-white/[0.06]" />
-
-          {/* Model Selector */}
-          <div className="relative">
-            <button
-              onClick={() => setIsModelOpen(!isModelOpen)}
-              className={cn(
-                'flex items-center gap-2 px-3 py-1.5',
-                'text-xs font-medium text-text-secondary',
-                'bg-white/[0.03] hover:bg-white/[0.06]',
-                'rounded-lg',
-                'ring-1 ring-inset ring-white/[0.06] hover:ring-white/[0.08]',
-                'transition-all duration-150'
-              )}
-            >
-              {/* Status indicator */}
-              <span
-                className={cn(
-                  'h-2 w-2 rounded-full',
-                  'bg-emerald-500',
-                  'shadow-[0_0_6px_1px_rgba(16,185,129,0.4)]'
-                )}
-              />
-              <span className="capitalize">{selectedModel}</span>
-              <ChevronIcon
-                className={cn(
-                  'h-3 w-3 text-text-muted transition-transform duration-150',
-                  isModelOpen && 'rotate-180'
-                )}
-              />
-            </button>
-
-            {/* Dropdown */}
-            {isModelOpen && (
-              <>
-                <div
-                  className="fixed inset-0 z-40"
-                  onClick={() => setIsModelOpen(false)}
-                />
-                <div
-                  className={cn(
-                    'absolute right-0 top-full mt-1 z-50',
-                    'w-48 py-1',
-                    'bg-bg-elevated/95 backdrop-blur-xl',
-                    'rounded-lg',
-                    'ring-1 ring-white/[0.08]',
-                    'shadow-[0_8px_30px_-4px_rgba(0,0,0,0.4)]',
-                    'animate-scale-in origin-top-right'
-                  )}
-                >
-                  {models.map((model) => (
-                    <button
-                      key={model.id}
-                      onClick={() => {
-                        setSelectedModel(model.id);
-                        setIsModelOpen(false);
-                      }}
-                      className={cn(
-                        'w-full flex items-center gap-3 px-3 py-2',
-                        'text-left transition-colors duration-150',
-                        selectedModel === model.id
-                          ? 'bg-white/[0.06]'
-                          : 'hover:bg-white/[0.04]'
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          'h-2 w-2 rounded-full',
-                          selectedModel === model.id
-                            ? 'bg-emerald-500 shadow-[0_0_6px_1px_rgba(16,185,129,0.4)]'
-                            : 'bg-text-muted/50'
-                        )}
-                      />
-                      <div>
-                        <div className="text-sm font-medium text-text-primary">
-                          {model.label}
-                        </div>
-                        <div className="text-xs text-text-muted">
-                          {model.description}
-                        </div>
-                      </div>
-                      {selectedModel === model.id && (
-                        <CheckIcon className="h-4 w-4 text-emerald-500 ml-auto" />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
 
           {/* Settings */}
           <button
@@ -392,19 +287,6 @@ export const TopBar: FC<TopBarProps> = ({
 };
 
 // Icons
-const PlanIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M2 4h12M2 8h8M2 12h10" />
-  </svg>
-);
-
-const BuildIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M13 3L5 11l-2 2 2-2-2 2 4-4 8-8-2 2z" />
-    <path strokeLinecap="round" strokeLinejoin="round" d="M11 5l-6 6" />
-  </svg>
-);
-
 const ChevronIcon: FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
     <path strokeLinecap="round" strokeLinejoin="round" d="M4 6l4 4 4-4" />
@@ -432,14 +314,145 @@ const SettingsIcon: FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
-const CheckIcon: FC<{ className?: string }> = ({ className }) => (
+const StatsIcon: FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 16 16" fill="currentColor">
-    <path
-      fillRule="evenodd"
-      d="M12.416 3.376a.75.75 0 01.208 1.04l-5 7.5a.75.75 0 01-1.154.114l-3-3a.75.75 0 011.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 011.04-.207z"
-      clipRule="evenodd"
-    />
+    <path d="M4 11a1 1 0 011-1h1a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM9 8a1 1 0 011-1h1a1 1 0 011 1v6a1 1 0 01-1 1h-1a1 1 0 01-1-1V8zM14 5a1 1 0 00-1-1h-1a1 1 0 00-1 1v9a1 1 0 001 1h1a1 1 0 001-1V5z" />
   </svg>
 );
+
+const ClockIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 16 16" fill="currentColor">
+    <path fillRule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm.75-10.25a.75.75 0 00-1.5 0v3.5c0 .414.336.75.75.75h2.5a.75.75 0 000-1.5h-1.75v-2.75z" clipRule="evenodd" />
+  </svg>
+);
+
+const CalendarIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 16 16" fill="currentColor">
+    <path fillRule="evenodd" d="M4 1.5a.5.5 0 01.5.5v1h7V2a.5.5 0 011 0v1h1a2 2 0 012 2v8a2 2 0 01-2 2H2.5a2 2 0 01-2-2V5a2 2 0 012-2h1V2a.5.5 0 01.5-.5zM2.5 6a.5.5 0 00-.5.5v6.5a1 1 0 001 1h10a1 1 0 001-1V6.5a.5.5 0 00-.5-.5h-11z" clipRule="evenodd" />
+  </svg>
+);
+
+const RefreshIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M2.5 8a5.5 5.5 0 019.9-3.3M13.5 8a5.5 5.5 0 01-9.9 3.3" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 2v3h-3M4 11v3h3" />
+  </svg>
+);
+
+const GridIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 16 16" fill="currentColor">
+    <path d="M1 2.5A1.5 1.5 0 012.5 1h3A1.5 1.5 0 017 2.5v3A1.5 1.5 0 015.5 7h-3A1.5 1.5 0 011 5.5v-3zM9 2.5A1.5 1.5 0 0110.5 1h3A1.5 1.5 0 0115 2.5v3A1.5 1.5 0 0113.5 7h-3A1.5 1.5 0 019 5.5v-3zM1 10.5A1.5 1.5 0 012.5 9h3A1.5 1.5 0 017 10.5v3A1.5 1.5 0 015.5 15h-3A1.5 1.5 0 011 13.5v-3zM9 10.5a1.5 1.5 0 011.5-1.5h3a1.5 1.5 0 011.5 1.5v3a1.5 1.5 0 01-1.5 1.5h-3A1.5 1.5 0 019 13.5v-3z" />
+  </svg>
+);
+
+// Circular progress indicator
+interface UsageCircleProps {
+  percentage: number;
+  status: 'good' | 'warning' | 'critical';
+  size?: number;
+}
+
+const UsageCircle: FC<UsageCircleProps> = ({ percentage, status, size = 20 }) => {
+  const strokeWidth = 2;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = radius * 2 * Math.PI;
+  const strokeDashoffset = circumference - (percentage / 100) * circumference;
+
+  const statusColors = {
+    good: 'stroke-emerald-500',
+    warning: 'stroke-amber-500',
+    critical: 'stroke-red-500',
+  };
+
+  return (
+    <svg width={size} height={size} className="transform -rotate-90">
+      {/* Background circle */}
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={strokeWidth}
+        className="text-white/[0.08]"
+      />
+      {/* Progress circle */}
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        fill="none"
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+        className={statusColors[status]}
+        style={{
+          strokeDasharray: circumference,
+          strokeDashoffset,
+          transition: 'stroke-dashoffset 0.3s ease',
+        }}
+      />
+    </svg>
+  );
+};
+
+// Usage row component
+interface UsageRowProps {
+  label: string;
+  percentage: number;
+  status: 'good' | 'warning' | 'critical';
+  resetsIn: string;
+}
+
+const UsageRow: FC<UsageRowProps> = ({ label, percentage, status, resetsIn }) => {
+  const statusColors = {
+    good: 'bg-emerald-500',
+    warning: 'bg-amber-500',
+    critical: 'bg-red-500',
+  };
+
+  const statusLabels = {
+    good: 'Good',
+    warning: 'Warning',
+    critical: 'Critical',
+  };
+
+  const statusBadgeColors = {
+    good: 'bg-emerald-500/10 text-emerald-400 ring-emerald-500/20',
+    warning: 'bg-amber-500/10 text-amber-400 ring-amber-500/20',
+    critical: 'bg-red-500/10 text-red-400 ring-red-500/20',
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-1.5">
+        <span className="text-sm font-medium text-text-primary">{label}</span>
+        <div className="flex items-center gap-2">
+          <span
+            className={cn(
+              'px-1.5 py-0.5 rounded text-[10px] font-medium',
+              'ring-1 ring-inset',
+              statusBadgeColors[status]
+            )}
+          >
+            {statusLabels[status]}
+          </span>
+          <span className="text-sm font-semibold text-text-primary tabular-nums">
+            {percentage}%
+          </span>
+        </div>
+      </div>
+      <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden mb-1">
+        <div
+          className={cn('h-full rounded-full transition-all duration-300', statusColors[status])}
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+      <div className="flex items-center gap-1 text-[10px] text-text-muted">
+        <RefreshIcon className="h-2.5 w-2.5" />
+        <span>Resets in {resetsIn}</span>
+      </div>
+    </div>
+  );
+};
 
 export default TopBar;

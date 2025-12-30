@@ -1,13 +1,13 @@
 import { type FC, useState } from 'react';
 import { cn } from '../../lib/utils';
-import { mockMCPServers } from '../../lib/mock-data';
 
 interface SidebarProps {
   className?: string;
   onCollapse?: (collapsed: boolean) => void;
+  onOpenMarketplace?: () => void;
 }
 
-type NavSection = 'home' | 'search' | 'all' | 'starred' | 'recent' | 'templates' | 'integrations' | 'learn' | 'skills' | 'plugins';
+type NavSection = 'home' | 'search' | 'all' | 'starred' | 'recent';
 
 /**
  * Premium Sidebar Component
@@ -18,7 +18,7 @@ type NavSection = 'home' | 'search' | 'all' | 'starred' | 'recent' | 'templates'
  * - Premium workspace selector with gradient
  * - Animated collapse/expand transitions
  */
-export const Sidebar: FC<SidebarProps> = ({ className, onCollapse }) => {
+export const Sidebar: FC<SidebarProps> = ({ className, onCollapse, onOpenMarketplace }) => {
   const [activeSection, setActiveSection] = useState<NavSection>('home');
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -39,29 +39,14 @@ export const Sidebar: FC<SidebarProps> = ({ className, onCollapse }) => {
     { id: 'recent' as const, label: 'Recent', icon: ClockIcon },
   ];
 
-  const resourceItems = [
-    { id: 'templates' as const, label: 'Templates', icon: TemplateIcon },
-    { id: 'integrations' as const, label: 'Integrations', icon: PlugIcon },
-    { id: 'learn' as const, label: 'Learn', icon: BookIcon },
-  ];
 
-  // Skills (slash commands)
-  const skills = [
-    { id: 'commit', name: '/commit', description: 'Git commits', enabled: true },
-    { id: 'review-pr', name: '/review-pr', description: 'PR reviews', enabled: true },
-    { id: 'frontend-design', name: '/frontend-design', description: 'UI generation', enabled: true },
-    { id: 'deploy', name: '/deploy', description: 'Deploy to Vercel', enabled: false },
-  ];
-
-  // Plugins
-  const plugins = [
-    { id: 'context7', name: 'Context7', description: 'Latest docs', status: 'connected' as const },
+  // Integrations (merged from Plugins - user-friendly names)
+  const integrations = [
     { id: 'supabase', name: 'Supabase', description: 'Database & Auth', status: 'connected' as const },
     { id: 'vercel', name: 'Vercel', description: 'Deployment', status: 'available' as const },
     { id: 'stripe', name: 'Stripe', description: 'Payments', status: 'available' as const },
+    { id: 'github', name: 'GitHub', description: 'Version control', status: 'available' as const },
   ];
-
-  const connectedServers = mockMCPServers.filter(s => s.status === 'connected');
 
   // Collapsed sidebar
   if (isCollapsed) {
@@ -209,26 +194,11 @@ export const Sidebar: FC<SidebarProps> = ({ className, onCollapse }) => {
           ))}
         </SidebarSection>
 
-        {/* Resources Section */}
-        <SidebarSection title="Resources">
-          {resourceItems.map((item) => (
-            <NavItem
-              key={item.id}
-              icon={item.icon}
-              label={item.label}
-              isActive={activeSection === item.id}
-              isHovered={hoveredItem === item.id}
-              onClick={() => setActiveSection(item.id)}
-              onHover={(hovered) => setHoveredItem(hovered ? item.id : null)}
-            />
-          ))}
-        </SidebarSection>
-
-        {/* Skills Section */}
-        <SidebarSection title="Skills">
-          {skills.map((skill) => (
+        {/* Integrations - Simple, user-friendly */}
+        <SidebarSection title="Integrations">
+          {integrations.map((integration) => (
             <div
-              key={skill.id}
+              key={integration.id}
               className={cn(
                 'flex items-center gap-2.5 px-2 py-1.5 rounded-lg',
                 'hover:bg-white/[0.04]',
@@ -239,52 +209,15 @@ export const Sidebar: FC<SidebarProps> = ({ className, onCollapse }) => {
               <div
                 className={cn(
                   'h-6 w-6 rounded-md flex items-center justify-center',
-                  'bg-purple-500/10 ring-1 ring-inset ring-purple-500/20'
-                )}
-              >
-                <SkillIcon className="h-3.5 w-3.5 text-purple-400" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-xs font-mono text-text-secondary truncate">
-                  {skill.name}
-                </div>
-              </div>
-              <div
-                className={cn(
-                  'h-2 w-2 rounded-full transition-colors',
-                  skill.enabled
-                    ? 'bg-emerald-500 shadow-[0_0_4px_1px_rgba(16,185,129,0.4)]'
-                    : 'bg-text-muted/30'
-                )}
-              />
-            </div>
-          ))}
-        </SidebarSection>
-
-        {/* Plugins Section */}
-        <SidebarSection title="Plugins">
-          {plugins.map((plugin) => (
-            <div
-              key={plugin.id}
-              className={cn(
-                'flex items-center gap-2.5 px-2 py-1.5 rounded-lg',
-                'hover:bg-white/[0.04]',
-                'transition-all duration-150',
-                'cursor-pointer group'
-              )}
-            >
-              <div
-                className={cn(
-                  'h-6 w-6 rounded-md flex items-center justify-center',
-                  plugin.status === 'connected'
+                  integration.status === 'connected'
                     ? 'bg-accent/10 ring-1 ring-inset ring-accent/20'
                     : 'bg-white/[0.04] ring-1 ring-inset ring-white/[0.06]'
                 )}
               >
-                <PluginIcon
+                <IntegrationIcon
                   className={cn(
                     'h-3.5 w-3.5',
-                    plugin.status === 'connected' ? 'text-accent' : 'text-text-muted'
+                    integration.status === 'connected' ? 'text-accent' : 'text-text-muted'
                   )}
                 />
               </div>
@@ -292,13 +225,13 @@ export const Sidebar: FC<SidebarProps> = ({ className, onCollapse }) => {
                 <div
                   className={cn(
                     'text-sm truncate',
-                    plugin.status === 'connected' ? 'text-text-secondary' : 'text-text-muted'
+                    integration.status === 'connected' ? 'text-text-secondary' : 'text-text-muted'
                   )}
                 >
-                  {plugin.name}
+                  {integration.name}
                 </div>
               </div>
-              {plugin.status === 'connected' ? (
+              {integration.status === 'connected' ? (
                 <span
                   className={cn(
                     'h-2 w-2 rounded-full',
@@ -315,97 +248,37 @@ export const Sidebar: FC<SidebarProps> = ({ className, onCollapse }) => {
                     'transition-colors duration-150'
                   )}
                 >
-                  Add
+                  Connect
                 </button>
               )}
             </div>
           ))}
-        </SidebarSection>
-
-        {/* Connected Integrations */}
-        {connectedServers.length > 0 && (
-          <SidebarSection title="Connected">
-            {connectedServers.map((server) => (
-              <div
-                key={server.id}
-                className={cn(
-                  'flex items-center gap-2.5 px-2 py-1.5',
-                  'text-sm text-text-secondary'
-                )}
-              >
-                <span
-                  className={cn(
-                    'h-2 w-2 rounded-full',
-                    'bg-emerald-500',
-                    'shadow-[0_0_6px_1px_rgba(16,185,129,0.4)]'
-                  )}
-                />
-                <span className="truncate">{server.name}</span>
-              </div>
-            ))}
-          </SidebarSection>
-        )}
-      </nav>
-
-      {/* Bottom Section */}
-      <div className="p-3 space-y-3 border-t border-white/[0.04]">
-        {/* Referral Card */}
-        <div
-          className={cn(
-            'p-3 rounded-xl',
-            'bg-gradient-to-br from-accent/10 via-orange-500/5 to-amber-500/10',
-            'ring-1 ring-inset ring-accent/20',
-            'shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]'
-          )}
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-text-primary">
-                Share VibeOS
-              </p>
-              <p className="text-xs text-text-muted mt-0.5">
-                Get 10 credits each
-              </p>
-            </div>
-            <button
-              className={cn(
-                'p-2.5 rounded-lg',
-                'bg-bg-elevated/80 hover:bg-bg-elevated',
-                'ring-1 ring-inset ring-white/[0.08]',
-                'transition-all duration-150',
-                'hover:scale-105 active:scale-95'
-              )}
-            >
-              <GiftIcon className="h-4 w-4 text-accent" />
-            </button>
-          </div>
-        </div>
-
-        {/* Usage Bar */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-text-muted">Usage this month</span>
-            <span className="text-text-secondary font-medium">45%</span>
-          </div>
-          <div
+          {/* Browse Marketplace Button */}
+          <button
+            onClick={onOpenMarketplace}
             className={cn(
-              'h-1.5 rounded-full overflow-hidden',
-              'bg-white/[0.06]',
-              'ring-1 ring-inset ring-white/[0.04]'
+              'w-full flex items-center gap-2.5 px-2 py-1.5 mt-2 rounded-lg',
+              'text-sm text-text-muted',
+              'hover:text-text-secondary hover:bg-white/[0.04]',
+              'transition-all duration-150',
+              'ring-1 ring-inset ring-white/[0.06] ring-dashed'
             )}
           >
             <div
               className={cn(
-                'h-full rounded-full',
-                'bg-gradient-to-r from-accent to-orange-400',
-                'shadow-[0_0_8px_0_rgba(234,88,12,0.3)]',
-                'transition-all duration-500 ease-out'
+                'h-6 w-6 rounded-md flex items-center justify-center',
+                'bg-white/[0.04] ring-1 ring-inset ring-white/[0.06]'
               )}
-              style={{ width: '45%' }}
-            />
-          </div>
-        </div>
+            >
+              <MarketplaceIcon className="h-3.5 w-3.5 text-text-muted" />
+            </div>
+            <span>Browse Marketplace</span>
+          </button>
+        </SidebarSection>
+      </nav>
 
+      {/* Bottom Section */}
+      <div className="p-3 border-t border-white/[0.04]">
         {/* Collapse Button */}
         <button
           onClick={() => handleCollapse(true)}
@@ -565,28 +438,9 @@ const ClockIcon: FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
-const TemplateIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
-    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-  </svg>
-);
-
-const PlugIcon: FC<{ className?: string }> = ({ className }) => (
+const IntegrationIcon: FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 20 20" fill="currentColor">
     <path fillRule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clipRule="evenodd" />
-  </svg>
-);
-
-const BookIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
-    <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
-  </svg>
-);
-
-const GiftIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
-    <path fillRule="evenodd" d="M5 5a3 3 0 015-2.236A3 3 0 0114.83 6H16a2 2 0 110 4h-5V9a1 1 0 10-2 0v1H4a2 2 0 110-4h1.17C5.06 5.687 5 5.35 5 5zm4 1V5a1 1 0 10-1 1h1zm3 0a1 1 0 10-1-1v1h1z" clipRule="evenodd" />
-    <path d="M9 11H3v5a2 2 0 002 2h4v-7zM11 18h4a2 2 0 002-2v-5h-6v7z" />
   </svg>
 );
 
@@ -608,15 +462,9 @@ const ChevronUpDownIcon: FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
-const SkillIcon: FC<{ className?: string }> = ({ className }) => (
+const MarketplaceIcon: FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 20 20" fill="currentColor">
-    <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
-  </svg>
-);
-
-const PluginIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
-    <path d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z" />
+    <path fillRule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clipRule="evenodd" />
   </svg>
 );
 

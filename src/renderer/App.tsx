@@ -6,6 +6,7 @@ import ChatPanel from './components/chat/ChatPanel';
 import PreviewPanel from './components/preview/PreviewPanel';
 import { CommandPalette } from './components/modals/CommandPalette';
 import { SettingsModal } from './components/modals/SettingsModal';
+import { MarketplaceModal } from './components/marketplace/MarketplaceModal';
 
 const App: FC = () => {
   const [hasStarted, setHasStarted] = useState(false);
@@ -14,6 +15,7 @@ const App: FC = () => {
   // Modal states
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isMarketplaceOpen, setIsMarketplaceOpen] = useState(false);
 
   // Preview state
   const [previewUrl, setPreviewUrl] = useState<string | undefined>();
@@ -53,8 +55,9 @@ const App: FC = () => {
     if (event.key === 'Escape') {
       if (isCommandPaletteOpen) setIsCommandPaletteOpen(false);
       if (isSettingsOpen) setIsSettingsOpen(false);
+      if (isMarketplaceOpen) setIsMarketplaceOpen(false);
     }
-  }, [isCommandPaletteOpen, isSettingsOpen]);
+  }, [isCommandPaletteOpen, isSettingsOpen, isMarketplaceOpen]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -84,6 +87,7 @@ const App: FC = () => {
       <AppLayout
         onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
         onOpenSettings={() => setIsSettingsOpen(true)}
+        onOpenMarketplace={() => setIsMarketplaceOpen(true)}
       >
         {!hasStarted ? (
           <WelcomeScreen onStartProject={handleStartProject} />
@@ -113,6 +117,12 @@ const App: FC = () => {
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
+      />
+
+      {/* Marketplace Modal */}
+      <MarketplaceModal
+        isOpen={isMarketplaceOpen}
+        onClose={() => setIsMarketplaceOpen(false)}
       />
     </>
   );

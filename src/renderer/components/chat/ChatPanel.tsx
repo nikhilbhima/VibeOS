@@ -125,7 +125,7 @@ export const ChatPanel: FC<ChatPanelProps> = ({ className, projectName }) => {
         </div>
 
         <div className="flex items-center gap-1.5">
-          {/* Activity toggle */}
+          {/* Toggle to show what Claude is doing */}
           <button
             onClick={() => setShowActivity(!showActivity)}
             className={cn(
@@ -141,30 +141,7 @@ export const ChatPanel: FC<ChatPanelProps> = ({ className, projectName }) => {
             )}
           >
             <ActivityIcon className="h-3.5 w-3.5" />
-            <span>Activity</span>
-            {showActivity && (
-              <span
-                className={cn(
-                  'ml-1 px-1.5 py-0.5 rounded text-[10px] font-medium',
-                  'bg-accent/15 text-accent'
-                )}
-              >
-                {mockActivities.filter((a) => a.status === 'running').length ||
-                  '0'}
-              </span>
-            )}
-          </button>
-
-          {/* More options */}
-          <button
-            className={cn(
-              'p-2 rounded-lg',
-              'text-text-muted hover:text-text-primary',
-              'hover:bg-white/[0.04]',
-              'transition-all duration-150'
-            )}
-          >
-            <MoreIcon className="h-4 w-4" />
+            <span>Details</span>
           </button>
         </div>
       </div>
@@ -216,12 +193,6 @@ const ActivityIcon: FC<{ className?: string }> = ({ className }) => (
       d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"
       clipRule="evenodd"
     />
-  </svg>
-);
-
-const MoreIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
-    <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
   </svg>
 );
 

@@ -10,6 +10,7 @@ interface AppLayoutProps {
   className?: string;
   onOpenCommandPalette?: () => void;
   onOpenSettings?: () => void;
+  onOpenMarketplace?: () => void;
 }
 
 export const AppLayout: FC<AppLayoutProps> = ({
@@ -19,11 +20,12 @@ export const AppLayout: FC<AppLayoutProps> = ({
   className,
   onOpenCommandPalette,
   onOpenSettings,
+  onOpenMarketplace,
 }) => {
   return (
     <div className="flex h-screen flex-col bg-bg-base overflow-hidden">
-      {/* Custom titlebar drag region */}
-      <div className="drag-region h-12 flex-shrink-0 border-b border-border-subtle bg-bg-surface/50 backdrop-blur-xl">
+      {/* Custom titlebar */}
+      <div className="h-12 flex-shrink-0 border-b border-border-subtle bg-bg-surface/50 backdrop-blur-xl overflow-visible">
         <TopBar
           onOpenCommandPalette={onOpenCommandPalette}
           onOpenSettings={onOpenSettings}
@@ -32,7 +34,7 @@ export const AppLayout: FC<AppLayoutProps> = ({
 
       {/* Main content area */}
       <div className="flex flex-1 overflow-hidden">
-        {showSidebar && <Sidebar />}
+        {showSidebar && <Sidebar onOpenMarketplace={onOpenMarketplace} />}
         <main className={cn('flex-1 overflow-hidden', className)}>
           {children}
         </main>
