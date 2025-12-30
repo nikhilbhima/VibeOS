@@ -1,11 +1,19 @@
 {
-  "name": "vibeos",
+  "name": "vibeos-claude-code-gui",
   "version": "0.1.0",
   "description": "Premium Claude Code GUI - If Anthropic built a GUI for Claude Code, this would be it.",
   "main": "dist/main/index.js",
   "author": "VibeOS",
   "license": "MIT",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nikhilbhima/VibeOS-claude-code-GUI.git"
+  },
+  "homepage": "https://github.com/nikhilbhima/VibeOS-claude-code-GUI#readme",
+  "bugs": {
+    "url": "https://github.com/nikhilbhima/VibeOS-claude-code-GUI/issues"
+  },
   "scripts": {
     "dev": "vite",
     "dev:electron": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",

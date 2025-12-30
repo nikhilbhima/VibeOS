@@ -47,6 +47,14 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = ({
     svelte: { icon: SvelteIcon, color: 'text-orange-500' },
   };
 
+  // Quick category suggestions - Claude style
+  const quickCategories = [
+    { id: 'landing', label: 'Landing Page', icon: WebIcon, prompt: 'Create a modern landing page with hero section, features, and pricing' },
+    { id: 'dashboard', label: 'Dashboard', icon: DashboardIcon, prompt: 'Build an analytics dashboard with charts and data tables' },
+    { id: 'ecommerce', label: 'E-commerce', icon: CartIcon, prompt: 'Create an e-commerce storefront with product listings and cart' },
+    { id: 'portfolio', label: 'Portfolio', icon: StarIcon, prompt: 'Design a creative portfolio to showcase my work' },
+  ];
+
   const handleSubmit = () => {
     if (prompt.trim() && onStartProject) {
       onStartProject(prompt);
@@ -123,13 +131,13 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = ({
           </p>
         </div>
 
-        {/* Main input area */}
+        {/* Main input area - Claude style */}
         <div className="relative">
           {/* Outer glow on focus */}
           <div
             className={cn(
               'absolute -inset-px rounded-[18px] transition-opacity duration-300',
-              'bg-gradient-to-b from-accent/30 via-accent/10 to-accent/5',
+              'bg-gradient-to-b from-accent/20 via-accent/5 to-transparent',
               isFocused ? 'opacity-100' : 'opacity-0'
             )}
           />
@@ -137,83 +145,112 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = ({
           <div
             className={cn(
               'relative rounded-2xl overflow-hidden',
-              'bg-bg-surface/80 backdrop-blur-xl',
+              'bg-[#2a2a2a]',
               'ring-1 ring-inset',
               isFocused
-                ? 'ring-accent/40'
+                ? 'ring-white/[0.15]'
                 : 'ring-white/[0.08] hover:ring-white/[0.12]',
-              'shadow-[0_8px_32px_-8px_rgba(0,0,0,0.4),inset_0_1px_0_0_rgba(255,255,255,0.04)]',
               'transition-all duration-200'
             )}
           >
+            {/* Input area */}
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               onKeyDown={handleKeyDown}
-              placeholder="Build me a modern SaaS landing page with a hero section, features grid, pricing table, and contact form..."
+              placeholder="How can I help you today?"
               className={cn(
                 'w-full bg-transparent',
-                'px-5 py-4 min-h-[130px] resize-none',
-                'text-base text-text-primary leading-relaxed',
-                'placeholder:text-text-muted/60',
+                'px-5 pt-5 pb-3 min-h-[80px] resize-none',
+                'text-[17px] text-text-primary leading-relaxed',
+                'placeholder:text-text-muted/50',
                 'focus:outline-none'
               )}
-              rows={3}
+              rows={2}
             />
 
             {/* Bottom bar */}
-            <div
-              className={cn(
-                'flex items-center justify-between px-4 py-3',
-                'border-t border-white/[0.06]',
-                'bg-white/[0.02]'
-              )}
-            >
+            <div className="flex items-center justify-between px-4 pb-4">
+              {/* Left controls */}
               <div className="flex items-center gap-1">
-                {/* Attach button */}
                 <button
                   className={cn(
-                    'flex items-center gap-1.5 px-3 py-1.5 rounded-lg',
-                    'text-xs font-medium text-text-muted',
-                    'hover:text-text-secondary hover:bg-white/[0.04]',
+                    'p-2 rounded-lg',
+                    'text-text-muted hover:text-text-secondary',
+                    'hover:bg-white/[0.04]',
                     'transition-all duration-150'
                   )}
+                  title="Add context"
                 >
-                  <AttachIcon className="h-4 w-4" />
-                  <span>Attach</span>
+                  <PlusIcon className="h-5 w-5" />
                 </button>
-
+                <button
+                  className={cn(
+                    'p-2 rounded-lg',
+                    'text-text-muted hover:text-text-secondary',
+                    'hover:bg-white/[0.04]',
+                    'transition-all duration-150'
+                  )}
+                  title="Recent prompts"
+                >
+                  <HistoryIcon className="h-5 w-5" />
+                </button>
               </div>
 
-              {/* Send button */}
-              <button
-                onClick={handleSubmit}
-                disabled={!prompt.trim()}
-                className={cn(
-                  'flex items-center gap-2 px-4 py-2 rounded-lg',
-                  'text-sm font-semibold',
-                  'transition-all duration-150',
-                  prompt.trim()
-                    ? cn(
-                        'bg-gradient-to-b from-[hsl(25,90%,52%)] to-[hsl(25,85%,45%)]',
-                        'text-white',
-                        'shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15),0_1px_2px_0_rgba(0,0,0,0.15),0_2px_8px_-2px_rgba(234,88,12,0.35)]',
-                        'hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),0_4px_12px_-2px_rgba(234,88,12,0.45)]',
-                        'hover:translate-y-[-1px] active:translate-y-[0.5px]'
-                      )
-                    : cn(
-                        'bg-white/[0.04] text-text-muted',
-                        'cursor-not-allowed'
-                      )
-                )}
-              >
-                <span>Start building</span>
-                <ArrowIcon className="h-4 w-4" />
-              </button>
+              {/* Right controls */}
+              <div className="flex items-center gap-2">
+                {/* Model selector */}
+                <ModelSelector />
+
+                {/* Send button */}
+                <button
+                  onClick={handleSubmit}
+                  disabled={!prompt.trim()}
+                  className={cn(
+                    'p-2.5 rounded-lg',
+                    'transition-all duration-150',
+                    prompt.trim()
+                      ? cn(
+                          'bg-[hsl(25,80%,50%)]',
+                          'text-white',
+                          'hover:bg-[hsl(25,80%,55%)]',
+                          'shadow-sm'
+                        )
+                      : cn(
+                          'bg-[hsl(25,60%,40%)]',
+                          'text-white/50',
+                          'cursor-not-allowed'
+                        )
+                  )}
+                >
+                  <SendArrowIcon className="h-4 w-4" />
+                </button>
+              </div>
             </div>
           </div>
+        </div>
+
+        {/* Quick category buttons - Claude style */}
+        <div className="flex items-center justify-center gap-2 mt-6">
+          {quickCategories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => setPrompt(category.prompt)}
+              className={cn(
+                'flex items-center gap-2 px-4 py-2.5 rounded-full',
+                'bg-transparent',
+                'ring-1 ring-inset ring-white/[0.12]',
+                'text-sm text-text-secondary',
+                'hover:bg-white/[0.04] hover:ring-white/[0.16]',
+                'transition-all duration-150'
+              )}
+            >
+              <category.icon className="h-4 w-4" />
+              <span>{category.label}</span>
+            </button>
+          ))}
         </div>
 
         {/* Recent Projects */}
@@ -235,6 +272,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = ({
             <div className="grid grid-cols-3 gap-3">
               {recentProjects.map((project) => {
                 const framework = frameworkIcons[project.framework];
+                if (!framework) return null;
                 const FrameworkIcon = framework.icon;
                 return (
                   <button
@@ -333,16 +371,6 @@ const VibeIcon: FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
-const AttachIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
-    <path
-      fillRule="evenodd"
-      d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
-
 const ArrowIcon: FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 20 20" fill="currentColor">
     <path
@@ -390,60 +418,6 @@ const CommandIcon: FC<{ className?: string }> = ({ className }) => (
     />
   </svg>
 );
-
-// Mode toggle with animated indicator
-const ModeToggle: FC = () => {
-  const [mode, setMode] = useState<'plan' | 'build'>('build');
-
-  return (
-    <div
-      className={cn(
-        'relative flex items-center gap-0.5 p-1',
-        'bg-white/[0.03] rounded-lg',
-        'ring-1 ring-inset ring-white/[0.06]'
-      )}
-    >
-      <div
-        className={cn(
-          'absolute top-1 h-[calc(100%-8px)] rounded-md',
-          'bg-white/[0.08]',
-          'shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]',
-          'transition-all duration-200 ease-out'
-        )}
-        style={{
-          width: 'calc(50% - 2px)',
-          left: mode === 'plan' ? '4px' : 'calc(50% + 2px)',
-        }}
-      />
-
-      <button
-        onClick={() => setMode('plan')}
-        className={cn(
-          'relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-md',
-          'text-xs font-medium',
-          'transition-colors duration-150',
-          mode === 'plan' ? 'text-text-primary' : 'text-text-muted'
-        )}
-      >
-        <PlanIcon className="h-3.5 w-3.5" />
-        <span>Plan</span>
-      </button>
-
-      <button
-        onClick={() => setMode('build')}
-        className={cn(
-          'relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-md',
-          'text-xs font-medium',
-          'transition-colors duration-150',
-          mode === 'build' ? 'text-text-primary' : 'text-text-muted'
-        )}
-      >
-        <BuildIcon className="h-3.5 w-3.5" />
-        <span>Build</span>
-      </button>
-    </div>
-  );
-};
 
 // Model selector
 type ModelType = 'haiku' | 'sonnet' | 'opus';
@@ -542,25 +516,53 @@ const ModelSelector: FC = () => {
   );
 };
 
-const PlanIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
-    <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
-  </svg>
-);
-
-const BuildIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
-    <path
-      fillRule="evenodd"
-      d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
-
 const ChevronIcon: FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
     <path strokeLinecap="round" strokeLinejoin="round" d="M4 6l4 4 4-4" />
+  </svg>
+);
+
+// Input control icons
+const PlusIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
+    <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+  </svg>
+);
+
+const HistoryIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
+    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+  </svg>
+);
+
+const SendArrowIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 16 16" fill="currentColor">
+    <path d="M2.5 8a.5.5 0 01.5-.5h8.793L8.646 4.354a.5.5 0 01.708-.708l4 4a.5.5 0 010 .708l-4 4a.5.5 0 01-.708-.708L11.793 8.5H3a.5.5 0 01-.5-.5z" />
+  </svg>
+);
+
+// Category icons
+const WebIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
+    <path fillRule="evenodd" d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z" clipRule="evenodd" />
+  </svg>
+);
+
+const DashboardIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
+    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+  </svg>
+);
+
+const CartIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
+    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+  </svg>
+);
+
+const StarIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
+    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
   </svg>
 );
 

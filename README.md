@@ -1,6 +1,8 @@
-# VibeOS
+# VibeOS - Claude Code GUI
 
 **The visual interface for Claude Code.**
+
+[![GitHub](https://img.shields.io/badge/GitHub-VibeOS--claude--code--GUI-blue?logo=github)](https://github.com/nikhilbhima/VibeOS-claude-code-GUI)
 
 VibeOS is a premium desktop GUI that brings the power of Claude Code to vibe coders. If Anthropic built a GUI for Claude Code, this would be it.
 
