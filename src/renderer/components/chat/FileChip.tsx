@@ -7,30 +7,60 @@ interface FileChipProps {
   className?: string;
 }
 
+/**
+ * Premium FileChip Component
+ *
+ * Design Philosophy: Refined file references
+ * - Glass-morphism background
+ * - Color-coded file type icons
+ * - Subtle hover lift effect
+ * - External link indicator on hover
+ */
 export const FileChip: FC<FileChipProps> = ({ filename, onClick, className }) => {
   // Get file extension for icon
   const ext = filename.split('.').pop()?.toLowerCase() || '';
   const icon = getFileIcon(ext);
-  const color = getFileColor(ext);
+  const colorConfig = getFileColor(ext);
 
   return (
     <button
       onClick={onClick}
       className={cn(
-        'group inline-flex items-center gap-1.5',
-        'px-2.5 py-1 rounded-lg',
-        'bg-bg-elevated/80 hover:bg-bg-hover',
-        'border border-border-subtle hover:border-border-default',
-        'text-xs font-mono text-text-secondary hover:text-text-primary',
+        'group inline-flex items-center gap-2',
+        'px-3 py-1.5 rounded-lg',
+        'bg-white/[0.03]',
+        'ring-1 ring-inset ring-white/[0.08]',
+        'hover:ring-white/[0.12] hover:bg-white/[0.05]',
+        'text-xs font-mono text-text-secondary',
+        'hover:text-text-primary',
         'transition-all duration-150',
+        'hover:shadow-[0_2px_8px_-2px_rgba(0,0,0,0.2)]',
         'cursor-pointer',
         className
       )}
     >
-      <span className={cn('flex-shrink-0', color)}>{icon}</span>
-      <span className="truncate max-w-[200px]">{filename}</span>
+      {/* File icon with color */}
+      <span
+        className={cn(
+          'flex-shrink-0 w-4 h-4 rounded',
+          'flex items-center justify-center',
+          colorConfig.bg
+        )}
+      >
+        <span className={colorConfig.text}>{icon}</span>
+      </span>
+
+      {/* Filename */}
+      <span className="truncate max-w-[180px]">{filename}</span>
+
+      {/* External link icon */}
       <svg
-        className="w-3 h-3 text-text-muted opacity-0 group-hover:opacity-100 transition-opacity"
+        className={cn(
+          'w-3 h-3 flex-shrink-0',
+          'text-text-muted',
+          'opacity-0 group-hover:opacity-100',
+          'transition-opacity duration-150'
+        )}
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -90,24 +120,30 @@ function getFileIcon(ext: string): JSX.Element {
   }
 }
 
-// Get color based on file extension
-function getFileColor(ext: string): string {
+// Get color config based on file extension
+function getFileColor(ext: string): { bg: string; text: string } {
   switch (ext) {
     case 'tsx':
     case 'jsx':
-      return 'text-cyan-400';
+      return { bg: 'bg-cyan-500/15', text: 'text-cyan-400' };
     case 'ts':
-      return 'text-blue-400';
+      return { bg: 'bg-blue-500/15', text: 'text-blue-400' };
     case 'js':
-      return 'text-yellow-400';
+      return { bg: 'bg-yellow-500/15', text: 'text-yellow-400' };
     case 'css':
-      return 'text-pink-400';
+      return { bg: 'bg-pink-500/15', text: 'text-pink-400' };
     case 'json':
-      return 'text-amber-400';
+      return { bg: 'bg-amber-500/15', text: 'text-amber-400' };
     case 'md':
-      return 'text-text-muted';
+      return { bg: 'bg-white/[0.06]', text: 'text-text-muted' };
+    case 'html':
+      return { bg: 'bg-orange-500/15', text: 'text-orange-400' };
+    case 'vue':
+      return { bg: 'bg-emerald-500/15', text: 'text-emerald-400' };
+    case 'svelte':
+      return { bg: 'bg-red-500/15', text: 'text-red-400' };
     default:
-      return 'text-text-muted';
+      return { bg: 'bg-white/[0.06]', text: 'text-text-muted' };
   }
 }
 
