@@ -91,39 +91,26 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = ({
 
       {/* Content */}
       <div className="relative z-10 w-full max-w-2xl px-6">
-        {/* Logo mark */}
-        <div className="flex justify-center mb-8">
-          <div
-            className={cn(
-              'h-14 w-14 rounded-2xl flex items-center justify-center',
-              'bg-gradient-to-br from-[hsl(25,90%,52%)] to-[hsl(20,80%,40%)]',
-              'shadow-[0_4px_20px_-4px_rgba(234,88,12,0.5),inset_0_1px_0_0_rgba(255,255,255,0.2)]',
-              'ring-1 ring-white/10'
-            )}
-          >
-            <BoltIcon className="h-7 w-7 text-white" />
-          </div>
-        </div>
-
-        {/* Welcome text */}
-        <div className="text-center mb-10">
+        {/* Welcome text - works with VibeOrb above */}
+        <div className="text-center mb-10 animate-stagger-reveal stagger-1">
           <h1
             className={cn(
-              'text-4xl font-semibold tracking-[-0.02em]',
-              'bg-gradient-to-b from-text-primary via-text-primary to-text-secondary',
+              'text-5xl font-bold tracking-[-0.03em]',
+              'bg-gradient-to-b from-text-primary via-text-primary/90 to-text-secondary/80',
               'bg-clip-text text-transparent',
-              'mb-3'
+              'mb-4'
             )}
+            style={{ fontFamily: 'var(--font-display)' }}
           >
             What do you want to build?
           </h1>
-          <p className="text-lg text-text-secondary tracking-[-0.01em]">
+          <p className="text-lg text-text-secondary/80 tracking-[-0.01em]">
             Describe your idea and watch it come to life
           </p>
         </div>
 
         {/* Main input area */}
-        <div className="relative">
+        <div className="relative animate-stagger-reveal stagger-2">
           {/* Outer glow on focus */}
           <div
             className={cn(
@@ -228,7 +215,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = ({
         </div>
 
         {/* Quick starters */}
-        <div className="mt-8">
+        <div className="mt-8 animate-stagger-reveal stagger-3">
           <p className="text-xs text-text-muted text-center mb-4 tracking-wide uppercase">
             Or start with a template
           </p>
@@ -271,7 +258,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = ({
         </div>
 
         {/* Keyboard hint */}
-        <div className="mt-14 text-center">
+        <div className="mt-14 text-center animate-stagger-reveal stagger-4">
           <p className="text-sm text-text-muted">
             Press{' '}
             <kbd
