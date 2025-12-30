@@ -1,0 +1,53 @@
+{
+  "model": "claude-sonnet-4-20250514",
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash(npm:*)",
+      "Bash(npx:*)",
+      "Bash(git:*)",
+      "Bash(node:*)",
+      "Bash(electron:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(mv:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Edit(src/**)",
+      "Edit(CLAUDE.md)",
+      "Edit(package.json)",
+      "Edit(tsconfig.json)",
+      "Edit(vite.config.ts)",
+      "Edit(tailwind.config.js)",
+      "Edit(electron-builder.json5)",
+      "Edit(.eslintrc.*)",
+      "Edit(.prettierrc*)",
+      "Write(src/**)",
+      "Write(resources/**)",
+      "Write(tests/**)",
+      "Read(**)"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(sudo:*)",
+      "Edit(.env*)",
+      "Edit(node_modules/**)",
+      "Write(.env*)",
+      "Write(node_modules/**)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx prettier --write \"$FILE\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  },
+  "enableAllProjectMcpServers": true
+}
