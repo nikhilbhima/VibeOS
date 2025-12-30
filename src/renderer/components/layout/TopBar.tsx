@@ -12,6 +12,7 @@ interface TopBarProps {
 
 type ViewTab = 'preview' | 'code' | 'changes';
 type ModelType = 'haiku' | 'sonnet' | 'opus';
+type ModeType = 'plan' | 'build';
 
 /**
  * Premium TopBar Component
@@ -31,6 +32,14 @@ export const TopBar: FC<TopBarProps> = ({
   const [activeTab, setActiveTab] = useState<ViewTab>('preview');
   const [selectedModel, setSelectedModel] = useState<ModelType>('sonnet');
   const [isModelOpen, setIsModelOpen] = useState(false);
+  const [mode, setMode] = useState<ModeType>('build');
+
+  // Mock usage data - in real app, this comes from Claude Code
+  const usage = {
+    tokensUsed: 45200,
+    tokensLimit: 100000,
+    percentage: 45.2,
+  };
 
   const tabs: { id: ViewTab; label: string }[] = [
     { id: 'preview', label: 'Preview' },
@@ -63,7 +72,7 @@ export const TopBar: FC<TopBarProps> = ({
       {/* Content */}
       <div className="no-drag relative h-full flex items-center justify-between px-4">
         {/* Left section - Logo & Project */}
-        <div className="flex items-center gap-3 min-w-[200px]">
+        <div className="flex items-center gap-3 min-w-[280px]">
           {/* Logo */}
           <div className="flex items-center gap-2.5">
             <div
@@ -105,6 +114,53 @@ export const TopBar: FC<TopBarProps> = ({
                 VibeOS
               </span>
             )}
+          </div>
+
+          {/* Divider */}
+          <div className="h-4 w-px bg-white/[0.06]" />
+
+          {/* Plan/Build Mode Toggle */}
+          <div
+            className={cn(
+              'relative flex items-center p-0.5',
+              'bg-white/[0.03] rounded-lg',
+              'ring-1 ring-inset ring-white/[0.06]'
+            )}
+          >
+            {/* Animated background */}
+            <div
+              className={cn(
+                'absolute top-0.5 h-[calc(100%-4px)] w-[calc(50%-2px)] rounded-md',
+                'transition-all duration-200 ease-out',
+                mode === 'plan'
+                  ? 'left-0.5 bg-purple-500/20 ring-1 ring-inset ring-purple-500/30'
+                  : 'left-[calc(50%+1px)] bg-emerald-500/20 ring-1 ring-inset ring-emerald-500/30'
+              )}
+            />
+            <button
+              onClick={() => setMode('plan')}
+              className={cn(
+                'relative z-10 flex items-center gap-1.5 px-2.5 py-1',
+                'text-xs font-medium rounded-md',
+                'transition-colors duration-150',
+                mode === 'plan' ? 'text-purple-400' : 'text-text-muted hover:text-text-secondary'
+              )}
+            >
+              <PlanIcon className="h-3.5 w-3.5" />
+              Plan
+            </button>
+            <button
+              onClick={() => setMode('build')}
+              className={cn(
+                'relative z-10 flex items-center gap-1.5 px-2.5 py-1',
+                'text-xs font-medium rounded-md',
+                'transition-colors duration-150',
+                mode === 'build' ? 'text-emerald-400' : 'text-text-muted hover:text-text-secondary'
+              )}
+            >
+              <BuildIcon className="h-3.5 w-3.5" />
+              Build
+            </button>
           </div>
         </div>
 
@@ -155,7 +211,41 @@ export const TopBar: FC<TopBarProps> = ({
         )}
 
         {/* Right section - Actions */}
-        <div className="flex items-center gap-2 min-w-[200px] justify-end">
+        <div className="flex items-center gap-2 min-w-[320px] justify-end">
+          {/* Usage Progress Bar */}
+          <button
+            className={cn(
+              'flex items-center gap-2 px-2.5 py-1.5',
+              'bg-white/[0.03] hover:bg-white/[0.06]',
+              'rounded-lg',
+              'ring-1 ring-inset ring-white/[0.06] hover:ring-white/[0.08]',
+              'transition-all duration-150',
+              'group'
+            )}
+            title={`${usage.tokensUsed.toLocaleString()} / ${usage.tokensLimit.toLocaleString()} tokens`}
+          >
+            {/* Progress bar container */}
+            <div className="w-16 h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+              <div
+                className={cn(
+                  'h-full rounded-full transition-all duration-300',
+                  usage.percentage < 50
+                    ? 'bg-emerald-500'
+                    : usage.percentage < 80
+                      ? 'bg-amber-500'
+                      : 'bg-red-500'
+                )}
+                style={{ width: `${usage.percentage}%` }}
+              />
+            </div>
+            <span className="text-[10px] font-medium text-text-muted group-hover:text-text-secondary tabular-nums">
+              {usage.percentage.toFixed(0)}%
+            </span>
+          </button>
+
+          {/* Divider */}
+          <div className="h-4 w-px bg-white/[0.06]" />
+
           {/* Search / Command Palette */}
           <button
             onClick={onOpenCommandPalette}
@@ -302,6 +392,19 @@ export const TopBar: FC<TopBarProps> = ({
 };
 
 // Icons
+const PlanIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M2 4h12M2 8h8M2 12h10" />
+  </svg>
+);
+
+const BuildIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M13 3L5 11l-2 2 2-2-2 2 4-4 8-8-2 2z" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M11 5l-6 6" />
+  </svg>
+);
+
 const ChevronIcon: FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
     <path strokeLinecap="round" strokeLinejoin="round" d="M4 6l4 4 4-4" />

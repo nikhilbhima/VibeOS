@@ -7,7 +7,7 @@ interface SidebarProps {
   onCollapse?: (collapsed: boolean) => void;
 }
 
-type NavSection = 'home' | 'search' | 'all' | 'starred' | 'recent' | 'templates' | 'integrations' | 'learn';
+type NavSection = 'home' | 'search' | 'all' | 'starred' | 'recent' | 'templates' | 'integrations' | 'learn' | 'skills' | 'plugins';
 
 /**
  * Premium Sidebar Component
@@ -43,6 +43,22 @@ export const Sidebar: FC<SidebarProps> = ({ className, onCollapse }) => {
     { id: 'templates' as const, label: 'Templates', icon: TemplateIcon },
     { id: 'integrations' as const, label: 'Integrations', icon: PlugIcon },
     { id: 'learn' as const, label: 'Learn', icon: BookIcon },
+  ];
+
+  // Skills (slash commands)
+  const skills = [
+    { id: 'commit', name: '/commit', description: 'Git commits', enabled: true },
+    { id: 'review-pr', name: '/review-pr', description: 'PR reviews', enabled: true },
+    { id: 'frontend-design', name: '/frontend-design', description: 'UI generation', enabled: true },
+    { id: 'deploy', name: '/deploy', description: 'Deploy to Vercel', enabled: false },
+  ];
+
+  // Plugins
+  const plugins = [
+    { id: 'context7', name: 'Context7', description: 'Latest docs', status: 'connected' as const },
+    { id: 'supabase', name: 'Supabase', description: 'Database & Auth', status: 'connected' as const },
+    { id: 'vercel', name: 'Vercel', description: 'Deployment', status: 'available' as const },
+    { id: 'stripe', name: 'Stripe', description: 'Payments', status: 'available' as const },
   ];
 
   const connectedServers = mockMCPServers.filter(s => s.status === 'connected');
@@ -205,6 +221,104 @@ export const Sidebar: FC<SidebarProps> = ({ className, onCollapse }) => {
               onClick={() => setActiveSection(item.id)}
               onHover={(hovered) => setHoveredItem(hovered ? item.id : null)}
             />
+          ))}
+        </SidebarSection>
+
+        {/* Skills Section */}
+        <SidebarSection title="Skills">
+          {skills.map((skill) => (
+            <div
+              key={skill.id}
+              className={cn(
+                'flex items-center gap-2.5 px-2 py-1.5 rounded-lg',
+                'hover:bg-white/[0.04]',
+                'transition-all duration-150',
+                'cursor-pointer group'
+              )}
+            >
+              <div
+                className={cn(
+                  'h-6 w-6 rounded-md flex items-center justify-center',
+                  'bg-purple-500/10 ring-1 ring-inset ring-purple-500/20'
+                )}
+              >
+                <SkillIcon className="h-3.5 w-3.5 text-purple-400" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-mono text-text-secondary truncate">
+                  {skill.name}
+                </div>
+              </div>
+              <div
+                className={cn(
+                  'h-2 w-2 rounded-full transition-colors',
+                  skill.enabled
+                    ? 'bg-emerald-500 shadow-[0_0_4px_1px_rgba(16,185,129,0.4)]'
+                    : 'bg-text-muted/30'
+                )}
+              />
+            </div>
+          ))}
+        </SidebarSection>
+
+        {/* Plugins Section */}
+        <SidebarSection title="Plugins">
+          {plugins.map((plugin) => (
+            <div
+              key={plugin.id}
+              className={cn(
+                'flex items-center gap-2.5 px-2 py-1.5 rounded-lg',
+                'hover:bg-white/[0.04]',
+                'transition-all duration-150',
+                'cursor-pointer group'
+              )}
+            >
+              <div
+                className={cn(
+                  'h-6 w-6 rounded-md flex items-center justify-center',
+                  plugin.status === 'connected'
+                    ? 'bg-accent/10 ring-1 ring-inset ring-accent/20'
+                    : 'bg-white/[0.04] ring-1 ring-inset ring-white/[0.06]'
+                )}
+              >
+                <PluginIcon
+                  className={cn(
+                    'h-3.5 w-3.5',
+                    plugin.status === 'connected' ? 'text-accent' : 'text-text-muted'
+                  )}
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div
+                  className={cn(
+                    'text-sm truncate',
+                    plugin.status === 'connected' ? 'text-text-secondary' : 'text-text-muted'
+                  )}
+                >
+                  {plugin.name}
+                </div>
+              </div>
+              {plugin.status === 'connected' ? (
+                <span
+                  className={cn(
+                    'h-2 w-2 rounded-full',
+                    'bg-emerald-500',
+                    'shadow-[0_0_4px_1px_rgba(16,185,129,0.4)]'
+                  )}
+                />
+              ) : (
+                <button
+                  className={cn(
+                    'px-2 py-0.5 rounded text-[10px] font-medium',
+                    'bg-white/[0.06] text-text-muted',
+                    'hover:bg-white/[0.08] hover:text-text-secondary',
+                    'transition-colors duration-150'
+                  )}
+                >
+                  Add
+                </button>
+              )}
+            </div>
           ))}
         </SidebarSection>
 
@@ -491,6 +605,18 @@ const CollapseIcon: FC<{ className?: string }> = ({ className }) => (
 const ChevronUpDownIcon: FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 20 20" fill="currentColor">
     <path fillRule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+  </svg>
+);
+
+const SkillIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
+    <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+  </svg>
+);
+
+const PluginIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
+    <path d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z" />
   </svg>
 );
 
